@@ -2,6 +2,7 @@ const { response } = require("express");
 const uuid = require("uuid");
 const dal = require("../data-access-layer/dal");
 
+
 // get all vacations (ALL USERS)
 async function getAllVacationsAsync() {
     const sql = `SELECT vacationId, destination, description, 
@@ -30,7 +31,7 @@ async function addOneVacation(vacation, image) {
     if (image) {
         const extension = image.name.substr(image.name.lastIndexOf("."));
         newFileName = uuid.v4() + extension;
-        await image.mv("./images/" + newFileName);
+        await image.mv("../images/" + newFileName);
     }
 
     const sql = `INSERT INTO vacations(vacationId, destination, description, fromDate, toDate, price, imageFileName)

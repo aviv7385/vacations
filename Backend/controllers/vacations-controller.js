@@ -17,7 +17,7 @@ router.get("/", async (request, response) => {
     }
 });
 
-// GET on vacation - /api/vacations/7
+// GET one vacation - /api/vacations/7
 router.get("/:vacationId", async (request, response) => {
     try {
         const vacationId = +request.params.vacationId;
@@ -26,6 +26,18 @@ router.get("/:vacationId", async (request, response) => {
             response.status(404).send(`id ${vacationId} not found.`);
         }
         response.json(vacation);
+    }
+    catch (err) {
+        response.status(500).send(err.message);
+    }
+});
+
+// GET image - /api/vacations/images/london.jpg
+router.get("/images/:imageFileName", async (request, response) => {
+    try {
+        const imageFileName = request.params.imageFileName;
+        const absolutePath = path.join(__dirname, "..", "images", imageFileName);
+        response.sendFile(absolutePath);
     }
     catch (err) {
         response.status(500).send(err.message);
