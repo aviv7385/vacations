@@ -4,14 +4,21 @@ const dal = require("../data-access-layer/dal");
 
 // get all vacations (ALL USERS)
 async function getAllVacationsAsync() {
-    const sql = `SELECT * FROM vacations`;
+    const sql = `SELECT vacationId, destination, description, 
+                DATE_FORMAT(fromDate, "%M %d %Y") AS fromDate, 
+                DATE_FORMAT(toDate, "%M %d %Y") AS toDate, 
+                price, imageFileName FROM vacations`;
     const vacations = await dal.executeAsync(sql);
     return vacations;
 }
 
 // get one vacation
 async function getOneVacationAsync(vacationId) {
-    const sql = `SELECT * FROM vacations WHERE vacationId = ${vacationId}`;
+    const sql = `SELECT vacationId, destination, description, 
+                DATE_FORMAT(fromDate, "%M %d %Y") AS fromDate, 
+                DATE_FORMAT(toDate, "%M %d %Y") AS toDate, 
+                price, imageFileName FROM vacations 
+                WHERE vacationId = ${vacationId}`;
     const vacations = await dal.executeAsync(sql);
     return vacations[0];
 }
@@ -64,7 +71,7 @@ async function updatePartialVacation(vacation) {
 }
 
 // Delete one vacation (ONLY ADMIN)
-async function deleteOneVacation(vacationId){
+async function deleteOneVacation(vacationId) {
     const sql = `DELETE FROM vacations WHERE vacationId = ${vacationId}`;
     await dal.executeAsync(sql);
 }

@@ -7,7 +7,7 @@ const { response } = require("express");
 const router = express.Router(); // Only the routing mechanism for our controller.
 
 // GET all vacations - /api/vacations
-router.get("/vacations", async (request, response) => {
+router.get("/", async (request, response) => {
     try {
         const vacations = await vacationsLogic.getAllVacationsAsync();
         response.json(vacations);
@@ -18,7 +18,7 @@ router.get("/vacations", async (request, response) => {
 });
 
 // GET on vacation - /api/vacations/7
-router.get("/vacations/:vacationId", async (request, response) => {
+router.get("/:vacationId", async (request, response) => {
     try {
         const vacationId = +request.params.vacationId;
         const vacation = await vacationsLogic.getOneVacationAsync(vacationId);
@@ -33,7 +33,7 @@ router.get("/vacations/:vacationId", async (request, response) => {
 });
 
 // POST - add new vacation (only ADMIN) - /api/vacations
-router.post("/vacations", async (request, response) => {
+router.post("/", async (request, response) => {
     try {
         const vacation = new Vacation(request.body);
         const error = vacation.validatePost();
@@ -50,7 +50,7 @@ router.post("/vacations", async (request, response) => {
 });
 
 // PUT - update full vacation (only ADMIN) - /api/vacations/7
-router.put("/vacations/:vacationId", async (request, response) => {
+router.put("/:vacationId", async (request, response) => {
     try {
         const vacation = new Vacation(request.body);
         vacation.vacationId = +request.params.vacationId;
@@ -72,7 +72,7 @@ router.put("/vacations/:vacationId", async (request, response) => {
 });
 
 // PATCH - update partial vacation info (only ADMIN) - /api/vacations/7
-router.patch("/vacations/:vacationId", async (request, response) => {
+router.patch("/:vacationId", async (request, response) => {
     try {
         const vacation = new Vacation(request.body);
         vacation.vacationId = +request.params.vacationId;
@@ -94,7 +94,7 @@ router.patch("/vacations/:vacationId", async (request, response) => {
 });
 
 // DELETE - remove one vacation (only ADMIN) - /api/vacations/7
-router.delete("/vacations/:vacationId", async (request, response) => {
+router.delete("/:vacationId", async (request, response) => {
     try {
         const vacationId = +request.params.vacationId;
         await vacationsLogic.deleteOneVacation(vacationId);

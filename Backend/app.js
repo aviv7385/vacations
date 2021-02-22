@@ -13,7 +13,7 @@ server.use(fileUpload());
 // enable CORS to all clients
 server.use(cors());
 
-server.use("/api", vacationsController); // When frontend requesting our server - transfer that request to the controller's router.
+server.use("/api/vacations", vacationsController); // When frontend requesting our server - transfer that request to the controller's router.
 
 server.use("*", (request, response) => {
     response.status(404).send("Route not found");
