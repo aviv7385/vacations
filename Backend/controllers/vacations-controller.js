@@ -48,11 +48,11 @@ router.get("/images/:imageFileName", async (request, response) => {
 router.post("/", async (request, response) => {
     try {
         const vacation = new Vacation(request.body);
-        const error = vacation.validatePost();
-        if (error) {
-            response.status(400).send(error);
-            return;
-        }
+        // const error = vacation.validatePost();
+        // if (error) {
+        //     response.status(400).send(error);
+        //     return;
+        // }
         const addedVacation = await vacationsLogic.addOneVacation(vacation, request.files ? request.files.image : null);
         response.status(201).json(addedVacation);
     }

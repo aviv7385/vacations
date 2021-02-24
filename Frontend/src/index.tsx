@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './Components/LayoutArea/App/App';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+import 'fontsource-roboto';
 
 ReactDOM.render(
     <React.StrictMode>

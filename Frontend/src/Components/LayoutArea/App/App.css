@@ -6,15 +6,11 @@
     grid-template-rows: 15% 80% 5%;
 }
 
-/* .App, .App > * {
-    border: 1px solid black;
-} */
-
 .App > header, .App > footer, .App > main {
     grid-column: span 6;
 }
 
 .App main {
     overflow: auto;
-    height: 95%;
+    height: 98%;
 }

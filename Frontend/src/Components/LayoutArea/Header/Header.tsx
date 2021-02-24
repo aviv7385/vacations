@@ -4,12 +4,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import { NavLink } from "react-router-dom";
 import "./Header.css";
-import Menu from '@material-ui/icons/Menu';
-import { MenuItem } from '@material-ui/core';
+
 
 
 function Header(): JSX.Element {
@@ -29,17 +26,6 @@ function Header(): JSX.Element {
     );
     const classes = useStyles();
 
-    // menu
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
     return (
         <div className="Header">
             <div className={classes.root}>
@@ -52,6 +38,7 @@ function Header(): JSX.Element {
                             Vacationsgram
                         </Typography>
 
+                        <Button color="inherit"><NavLink className="Link" to="/admin" exact>Admin</NavLink></Button>
                         <Button color="inherit"><NavLink className="Link" to="/login" exact>Login</NavLink></Button>
                         <Button color="inherit"><NavLink className="Link" to="/register" exact>Register</NavLink></Button>
                     </Toolbar>

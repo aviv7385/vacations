@@ -16,28 +16,28 @@ class Vacation {
     static #postValidationSchema = Joi.object({
         vacationId: Joi.number().optional(),
         destination: Joi.string().required().min(2).max(50),
-        description: Joi.string().required().min(5).max(5000).max(5000),
+        description: Joi.string().required().min(5).max(5000),
         fromDate: Joi.date().required().iso().min('now'),
         toDate: Joi.date().required().iso().min('now'),
-        price: Joi.number().required().min(50),
+        price: Joi.number().required().min(0),
         imageFileName: Joi.string().required().min(4)
     });
     static #putValidationSchema = Joi.object({
         vacationId: Joi.number().required().positive().integer(),
         destination: Joi.string().required().min(2).max(50),
-        description: Joi.string().required().min(5).max(5000).max(5000),
+        description: Joi.string().required().min(5).max(5000),
         fromDate: Joi.date().required().iso().min('now'),
         toDate: Joi.date().required().iso().min('now'),
-        price: Joi.number().required().min(50),
+        price: Joi.number().required().min(0),
         imageFileName: Joi.string().required().min(4)
     });
     static #patchValidationSchema = Joi.object({
         vacationId: Joi.number().required().positive().integer(),
         destination: Joi.string().min(2).max(50),
-        description: Joi.string().min(5).max(5000).max(5000),
+        description: Joi.string().min(5).max(5000),
         fromDate: Joi.date().iso().min('now'),
         toDate: Joi.date().iso().min('now'),
-        price: Joi.number().min(50),
+        price: Joi.number().min(0),
         imageFileName: Joi.string().min(4)
     });
 

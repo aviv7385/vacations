@@ -1,24 +1,25 @@
-import { Typography } from "@material-ui/core";
 import axios from "axios";
 import React, { Component } from "react";
 import store from "../../../Redux/Store";
 import { VacationsActionType } from "../../../Redux/VacationsState";
 import { Globals } from "../../../Services/Globals";
-import VacationModel from "../models/VacationModel";
-import VacationCard from "../VacationCard/VacationCard";
-import "./VacationsList.css";
+import "./AdminVacationsList.css";
+import VacationModel from "../../VacationsArea/models/VacationModel";
+import AdminVacationCard from "../AdminVacationCard/AdminVacationCard";
+import { Button, Typography } from "@material-ui/core";
+import { NavLink } from "react-router-dom";
 
-interface VacationsListState {
+
+interface AdminVacationsListState {
     vacations: VacationModel[];
 }
 
-class VacationsList extends Component<{}, VacationsListState> {
+class AdminVacationsList extends Component<{}, AdminVacationsListState>{
 
     public constructor(props: {}) {
         super(props);
         this.state = { vacations: store.getState().vacations };
     }
-
 
     public async componentDidMount() {
         try {
@@ -41,17 +42,23 @@ class VacationsList extends Component<{}, VacationsListState> {
 
     public render(): JSX.Element {
         return (
-            <div className="VacationsList">
-                <Typography variant="h4" component="h4" color="primary">
-                    Our Available Vacations
-                </Typography>
+            <div className="AdminVacationsList">
+                <div className="VacationsList">
+                    <Typography variant="h4" component="h4" color="primary">
+                    Available Vacations
+                    </Typography>
+                    <br/>
+                    <Button variant="contained" color="primary">
+                        <NavLink className="Link" to="/admin/add-vacation" exact>Add New Vacation</NavLink>
+                    </Button>
 
-                <div className="Card">
-                    {this.state.vacations.map(v => <VacationCard key={v.vacationId} singleVacation={v} />)}
+                    <div className="Card">
+                        {this.state.vacations.map(v => <AdminVacationCard key={v.vacationId} singleVacation={v} />)}
+                    </div>
                 </div>
             </div>
         );
     }
 }
 
-export default VacationsList;
+export default AdminVacationsList;
