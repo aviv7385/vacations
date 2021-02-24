@@ -1,13 +1,18 @@
 import { Box, Card, CardActionArea, CardContent, CardHeader, CardMedia, IconButton, makeStyles, Tooltip, Typography } from "@material-ui/core";
-import React from "react";
+import React, { useEffect } from "react";
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
 import { Globals } from "../../../Services/Globals";
 import "./AdminVacationCard.css";
 import VacationModel from "../../VacationsArea/models/VacationModel";
+import { NavLink } from "react-router-dom";
+
+const removeVacation = require("../DeleteVacation/DeleteVacation");
+
 
 interface AdminVacationCardProps {
     singleVacation: VacationModel;
+    
 }
 
 function AdminVacationCard(props: AdminVacationCardProps): JSX.Element {
@@ -21,6 +26,7 @@ function AdminVacationCard(props: AdminVacationCardProps): JSX.Element {
         },
     });
     const classes = useStyles();
+
 
     return (
         <div className="AdminVacationCard">
@@ -52,9 +58,11 @@ function AdminVacationCard(props: AdminVacationCardProps): JSX.Element {
                                     </Tooltip>
                                 </IconButton>
                                 <IconButton aria-label="settings">
-                                    <Tooltip title="Delete">
-                                        <DeleteOutlineOutlinedIcon fontSize="small" />
-                                    </Tooltip>
+                                    <NavLink className="Icon" to={"/admin/delete-vacation/" + props.singleVacation.vacationId} exact>
+                                        <Tooltip title="Delete">
+                                            <DeleteOutlineOutlinedIcon fontSize="small" />
+                                        </Tooltip>
+                                    </NavLink>
                                 </IconButton>
                             </Typography>
                         </CardContent>

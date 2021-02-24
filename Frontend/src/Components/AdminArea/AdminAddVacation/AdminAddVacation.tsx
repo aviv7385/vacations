@@ -1,22 +1,28 @@
-import { Button, ButtonGroup, createMuiTheme, FormControlLabel, makeStyles, TextField, ThemeProvider, Typography } from "@material-ui/core";
+import { Box, Button, ButtonGroup, createMuiTheme, FormControlLabel, makeStyles, TextField, ThemeProvider, Typography } from "@material-ui/core";
 import axios from "axios";
-import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { History } from "history";
 import store from "../../../Redux/Store";
 import { VacationsActionType } from "../../../Redux/VacationsState";
 import { Globals } from "../../../Services/Globals";
 import VacationModel from "../../VacationsArea/models/VacationModel";
+import React from 'react';
 import "./AdminAddVacation.css";
+import { DatePicker } from "@material-ui/pickers";
+
+
 
 interface AdminAddVacationProps {
     history: History;
 }
 
 function AdminAddVacation(props: AdminAddVacationProps): JSX.Element {
+    // get today's date (for the default value of date-picker)
+    const curr = new Date();
+    curr.setDate(curr.getDate());
+    const date = curr.toISOString().substr(0, 10);
 
-    // const history = useHistory(); // History Hook
-
+    // create form
     const { register, handleSubmit, errors } = useForm<VacationModel>();
 
     async function sendData(vacation: VacationModel) {
@@ -42,6 +48,7 @@ function AdminAddVacation(props: AdminAddVacationProps): JSX.Element {
         }
     }
 
+
     return (
 
         <div className="AdminAddVacation">
@@ -51,7 +58,7 @@ function AdminAddVacation(props: AdminAddVacationProps): JSX.Element {
 
             <form onSubmit={handleSubmit(sendData)}>
 
-               <label>Destination:</label>
+                <label>Destination:</label>
                 <input type="text" name="destination" ref={register({ required: true, minLength: 2, maxLength: 50 })} />
                 {errors.destination?.type === "required" && <span>Must enter destination!</span>}
                 {errors.destination?.type === "minLength" && <span>Destination should have minimum 2 characters.</span>}
@@ -59,18 +66,18 @@ function AdminAddVacation(props: AdminAddVacationProps): JSX.Element {
                 <br /><br />
 
                 <label>Description:</label>
-                <textarea name="description" rows={5} ref={register({ required: true, minLength: 5, maxLength: 5000  })}></textarea>
+                <textarea name="description" rows={5} ref={register({ required: true, minLength: 5, maxLength: 5000 })}></textarea>
                 {errors.description?.type === "required" && <span>Must enter description!</span>}
                 {errors.description?.type === "minLength" && <span>Description must have minimum 5 characters!</span>}
                 {errors.description?.type === "maxLength" && <span>Description must have minimum 5 characters!</span>}
                 <br /><br />
 
                 <label>From:</label>
-                <input type="date" name="fromDate" ref={register({ required: true })} />                
+                <input type="date" name="fromDate" min={date} ref={register({ required: true })} />
                 <br /><br />
 
                 <label>Until:</label>
-                <input type="date" name="toDate" ref={register({ required: true })} />
+                <input type="date" name="toDate" min={date} ref={register({ required: true })} />
                 <br /><br />
 
                 <label>Price:</label>

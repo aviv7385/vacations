@@ -49,9 +49,9 @@ function VacationCard(props: VacationCardProps): JSX.Element {
                         <CardContent>
                             <Typography variant="body1" color="textSecondary" component="p" align="left">
                                 {props.singleVacation.description} <br />
-                        From: {props.singleVacation.fromDate} <br />
-                        To: {props.singleVacation.toDate} <br />
-                        Price: ${props.singleVacation.price} <br />
+                                From: {props.singleVacation.fromDate} <br />
+                                To: {props.singleVacation.toDate} <br />
+                                Price: ${props.singleVacation.price} <br />
                             </Typography>
                             <Typography variant="body1" color="textSecondary" component="p" align="right">
                                 <Tooltip title="Followers">
