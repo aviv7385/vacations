@@ -1,4 +1,3 @@
-const { response } = require("express");
 const uuid = require("uuid");
 const dal = require("../data-access-layer/dal");
 
@@ -27,16 +26,16 @@ async function getOneVacationAsync(vacationId) {
 // add one vacation (ONLY ADMIN)
 async function addOneVacation(vacation, image) {
     // save image to server
-    let newFileName;
+    let newFileName = null;
     if (image) {
         const extension = image.name.substr(image.name.lastIndexOf("."));
         newFileName = uuid.v4() + extension;
-        await image.mv("../images/" + newFileName);
+        await image.mv("./images/" + newFileName);
     }
-
+    console.log(newFileName);
     const sql = `INSERT INTO vacations(vacationId, destination, description, fromDate, toDate, price, imageFileName)
                 VALUES (DEFAULT, '${vacation.destination}', '${vacation.description}', 
-                '${vacation.fromDate}', '${vacation.toDate}', ${vacation.price}, '${vacation.imageFileName}')`;
+                '${vacation.fromDate}', '${vacation.toDate}', ${vacation.price}, '${newFileName}')`;
     const info = await dal.executeAsync(sql);
     vacation.id = info.insertId;
     vacation.imageFileName = newFileName;

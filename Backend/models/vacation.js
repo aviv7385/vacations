@@ -12,7 +12,7 @@ class Vacation {
         this.imageFileName = existingVacation.imageFileName;
     }
 
-    // define rules regarding product properties - validation schema:
+    // define rules regarding vacation properties - validation schema:
     static #postValidationSchema = Joi.object({
         vacationId: Joi.number().optional(),
         destination: Joi.string().required().min(2).max(50),
@@ -20,7 +20,7 @@ class Vacation {
         fromDate: Joi.date().required().iso().min('now'),
         toDate: Joi.date().required().iso().min('now'),
         price: Joi.number().required().min(0),
-        imageFileName: Joi.string().required().min(4)
+        imageFileName: Joi.string().required()
     });
     static #putValidationSchema = Joi.object({
         vacationId: Joi.number().required().positive().integer(),
@@ -29,7 +29,7 @@ class Vacation {
         fromDate: Joi.date().required().iso().min('now'),
         toDate: Joi.date().required().iso().min('now'),
         price: Joi.number().required().min(0),
-        imageFileName: Joi.string().required().min(4)
+        imageFileName: Joi.string().required()
     });
     static #patchValidationSchema = Joi.object({
         vacationId: Joi.number().required().positive().integer(),
@@ -38,7 +38,7 @@ class Vacation {
         fromDate: Joi.date().iso().min('now'),
         toDate: Joi.date().iso().min('now'),
         price: Joi.number().min(0),
-        imageFileName: Joi.string().min(4)
+        imageFileName: Joi.string()
     });
 
      // Second - perform the validation on Vacation:

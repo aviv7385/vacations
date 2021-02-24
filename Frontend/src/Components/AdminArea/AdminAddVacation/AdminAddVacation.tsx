@@ -2,16 +2,20 @@ import { Button, ButtonGroup, createMuiTheme, FormControlLabel, makeStyles, Text
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useHistory } from "react-router-dom";
+import { History } from "history";
 import store from "../../../Redux/Store";
 import { VacationsActionType } from "../../../Redux/VacationsState";
 import { Globals } from "../../../Services/Globals";
 import VacationModel from "../../VacationsArea/models/VacationModel";
 import "./AdminAddVacation.css";
 
-function AdminAddVacation(): JSX.Element {
+interface AdminAddVacationProps {
+    history: History;
+}
 
-    const history = useHistory(); // History Hook
+function AdminAddVacation(props: AdminAddVacationProps): JSX.Element {
+
+    // const history = useHistory(); // History Hook
 
     const { register, handleSubmit, errors } = useForm<VacationModel>();
 
@@ -24,12 +28,12 @@ function AdminAddVacation(): JSX.Element {
             myFormData.append("toDate", vacation.toDate);
             myFormData.append("price", vacation.price.toString());
             myFormData.append("image", vacation.image.item(0));
-            const response = await axios.post<VacationModel>(Globals.vacationsUrl, vacation);
+            const response = await axios.post<VacationModel>(Globals.vacationsUrl, myFormData);
             const addedVacation = response.data;
             const action = { type: VacationsActionType.VacationAdded, payload: addedVacation };
             store.dispatch(action);
             alert(`Vacation to ${vacation.destination} has been successfully added.`);
-            history.push("/admin");
+            props.history.push("/admin");
         }
         catch (err) {
             console.log(err);
@@ -50,19 +54,19 @@ function AdminAddVacation(): JSX.Element {
                <label>Destination:</label>
                 <input type="text" name="destination" ref={register({ required: true, minLength: 2, maxLength: 50 })} />
                 {errors.destination?.type === "required" && <span>Must enter destination!</span>}
-                {errors.destination?.type === "minLength" && <span>Destination should have minimum 2 charachters.</span>}
-                {errors.destination?.type === "maxLength" && <span>Destination should have maximum 50 charachters.</span>}
+                {errors.destination?.type === "minLength" && <span>Destination should have minimum 2 characters.</span>}
+                {errors.destination?.type === "maxLength" && <span>Destination should have maximum 50 characters.</span>}
                 <br /><br />
 
                 <label>Description:</label>
                 <textarea name="description" rows={5} ref={register({ required: true, minLength: 5, maxLength: 5000  })}></textarea>
                 {errors.description?.type === "required" && <span>Must enter description!</span>}
-                {errors.description?.type === "minLength" && <span>Description must have minimum 5 charachters!</span>}
-                {errors.description?.type === "maxLength" && <span>Description must have minimum 5 charachters!</span>}
+                {errors.description?.type === "minLength" && <span>Description must have minimum 5 characters!</span>}
+                {errors.description?.type === "maxLength" && <span>Description must have minimum 5 characters!</span>}
                 <br /><br />
 
                 <label>From:</label>
-                <input type="date" name="fromDate" ref={register({ required: true })} />
+                <input type="date" name="fromDate" ref={register({ required: true })} />                
                 <br /><br />
 
                 <label>Until:</label>
