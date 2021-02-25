@@ -53,7 +53,7 @@ router.post("/", async (request, response) => {
         //     response.status(400).send(error);
         //     return;
         // }
-        const addedVacation = await vacationsLogic.addOneVacation(vacation, request.files ? request.files.image : null);
+        const addedVacation = await vacationsLogic.addOneVacationAsync(vacation, request.files ? request.files.image : null);
         response.status(201).json(addedVacation);
     }
     catch (err) {
@@ -93,7 +93,7 @@ router.patch("/:vacationId", async (request, response) => {
             response.status(400).send(error);
             return;
         }
-        const updatedVacation = await vacationsLogic.updatePartialVacation(vacation);
+        const updatedVacation = await vacationsLogic.updatePartialVacationAsync(vacation);
         if (!updatedVacation) {
             response.status(404).send(`id ${updatedVacation.vacationId} not found.`);
             return;
@@ -109,7 +109,7 @@ router.patch("/:vacationId", async (request, response) => {
 router.delete("/:vacationId", async (request, response) => {
     try {
         const vacationId = +request.params.vacationId;
-        await vacationsLogic.deleteOneVacation(vacationId);
+        await vacationsLogic.deleteOneVacationAsync(vacationId);
         response.sendStatus(204);
     }
     catch (err) {

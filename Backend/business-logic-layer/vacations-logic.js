@@ -14,6 +14,7 @@ async function getAllVacationsAsync() {
 
 // get one vacation
 async function getOneVacationAsync(vacationId) {
+    
     const sql = `SELECT vacationId, destination, description, 
                 DATE_FORMAT(fromDate, "%M %d %Y") AS fromDate, 
                 DATE_FORMAT(toDate, "%M %d %Y") AS toDate, 
@@ -24,7 +25,7 @@ async function getOneVacationAsync(vacationId) {
 }
 
 // add one vacation (ONLY ADMIN)
-async function addOneVacation(vacation, image) {
+async function addOneVacationAsync(vacation, image) {
     // save image to server
     let newFileName = null;
     if (image) {
@@ -32,7 +33,6 @@ async function addOneVacation(vacation, image) {
         newFileName = uuid.v4() + extension;
         await image.mv("./images/" + newFileName);
     }
-    console.log(newFileName);
     const sql = `INSERT INTO vacations(vacationId, destination, description, fromDate, toDate, price, imageFileName)
                 VALUES (DEFAULT, '${vacation.destination}', '${vacation.description}', 
                 '${vacation.fromDate}', '${vacation.toDate}', ${vacation.price}, '${newFileName}')`;
@@ -57,7 +57,7 @@ async function updateFullVacationAsync(vacation) {
 }
 
 // Update partial vacation (ONLY ADMIN)
-async function updatePartialVacation(vacation) {
+async function updatePartialVacationAsync(vacation) {
     const vacationToUpdate = await getOneVacationAsync(vacation.vacationId);
     if (!vacationToUpdate) {
         return null;
@@ -71,7 +71,7 @@ async function updatePartialVacation(vacation) {
 }
 
 // Delete one vacation (ONLY ADMIN)
-async function deleteOneVacation(vacationId) {
+async function deleteOneVacationAsync(vacationId) {
     const sql = `DELETE FROM vacations WHERE vacationId = ${vacationId}`;
     await dal.executeAsync(sql);
 }
@@ -80,8 +80,8 @@ async function deleteOneVacation(vacationId) {
 module.exports = {
     getAllVacationsAsync,
     getOneVacationAsync,
-    addOneVacation,
+    addOneVacationAsync,
     updateFullVacationAsync,
-    updatePartialVacation,
-    deleteOneVacation
+    updatePartialVacationAsync,
+    deleteOneVacationAsync
 }
