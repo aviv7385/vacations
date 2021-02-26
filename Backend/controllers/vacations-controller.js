@@ -2,12 +2,14 @@ const express = require("express");
 const path = require("path");
 const Vacation = require("../models/vacation");
 const vacationsLogic = require("../business-logic-layer/vacations-logic");
-
+const verifyLoggedIn = require("../middleware/verify-logged-in");
+const verifyAdmin = require("../middleware/verify-admin");
 
 const router = express.Router(); // Only the routing mechanism for our controller.
 
-// GET all vacations - /api/vacations
-router.get("/", async (request, response) => {
+
+// GET all vacations - /api/vacations (access allowed to logged in users only)
+router.get("/", /*verifyLoggedIn,*/ async (request, response) => {
     try {
         const vacations = await vacationsLogic.getAllVacationsAsync();
         response.json(vacations);
@@ -17,7 +19,7 @@ router.get("/", async (request, response) => {
     }
 });
 
-// GET one vacation - /api/vacations/7
+// GET one vacation - /api/vacations/7  (access allowed to logged in users only)
 router.get("/:vacationId", async (request, response) => {
     try {
         const vacationId = +request.params.vacationId;
@@ -32,8 +34,8 @@ router.get("/:vacationId", async (request, response) => {
     }
 });
 
-// GET image - /api/vacations/images/london.jpg
-router.get("/images/:imageFileName", async (request, response) => {
+// GET image - /api/vacations/images/london.jpg (access allowed to logged in users only)
+router.get("/images/:imageFileName",/*verifyLoggedIn,*/ async (request, response) => {
     try {
         const imageFileName = request.params.imageFileName;
         const absolutePath = path.join(__dirname, "..", "images", imageFileName);
@@ -44,8 +46,8 @@ router.get("/images/:imageFileName", async (request, response) => {
     }
 });
 
-// POST - add new vacation (only ADMIN) - /api/vacations
-router.post("/", async (request, response) => {
+// POST - add new vacation - /api/vacations (access allowed to admin only)
+router.post("/", /*verifyAdmin,*/ async (request, response) => {
     try {
         const vacation = new Vacation(request.body);
         // const error = vacation.validatePost();
@@ -61,8 +63,8 @@ router.post("/", async (request, response) => {
     }
 });
 
-// PUT - update full vacation (only ADMIN) - /api/vacations/7
-router.put("/:vacationId", async (request, response) => {
+// PUT - update full vacation - /api/vacations/7 (access allowed to admin only)
+router.put("/:vacationId",/*verifyAdmin,*/ async (request, response) => {
     try {
         const vacation = new Vacation(request.body);
         vacation.vacationId = +request.params.vacationId;
@@ -83,8 +85,8 @@ router.put("/:vacationId", async (request, response) => {
     }
 });
 
-// PATCH - update partial vacation info (only ADMIN) - /api/vacations/7
-router.patch("/:vacationId", async (request, response) => {
+// PATCH - update partial vacation info - /api/vacations/7 (access allowed to admin only)
+router.patch("/:vacationId",/*verifyAdmin,*/ async (request, response) => {
     try {
         const vacation = new Vacation(request.body);
         vacation.vacationId = +request.params.vacationId;
@@ -105,8 +107,8 @@ router.patch("/:vacationId", async (request, response) => {
     }
 });
 
-// DELETE - remove one vacation (only ADMIN) - /api/vacations/7
-router.delete("/:vacationId", async (request, response) => {
+// DELETE - remove one vacation - /api/vacations/7 (access allowed to admin only)
+router.delete("/:vacationId",/*verifyAdmin,*/ async (request, response) => {
     try {
         const vacationId = +request.params.vacationId;
         await vacationsLogic.deleteOneVacationAsync(vacationId);
