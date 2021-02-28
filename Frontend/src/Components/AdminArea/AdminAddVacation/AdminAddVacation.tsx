@@ -36,8 +36,10 @@ function AdminAddVacation(props: AdminAddVacationProps): JSX.Element {
             myFormData.append("image", vacation.image.item(0));
             const response = await axios.post<VacationModel>(Globals.vacationsUrl, myFormData);
             const addedVacation = response.data;
-            const action = { type: VacationsActionType.VacationAdded, payload: addedVacation };
-            store.dispatch(action);
+
+            // with redux:
+            // const action = { type: VacationsActionType.VacationAdded, payload: addedVacation };
+            // store.dispatch(action);
             alert(`Vacation to ${vacation.destination} has been successfully added.`);
             props.history.push("/admin");
         }

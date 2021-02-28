@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { NavLink } from "react-router-dom";
 import "./Header.css";
-
+import WelcomeUser from '../../UsersArea/WelcomeUser/WelcomeUser';
 
 
 function Header(): JSX.Element {
@@ -16,7 +16,7 @@ function Header(): JSX.Element {
             root: {
                 flexGrow: 1,
             },
-            menuButton: {
+            Button: {
                 marginRight: theme.spacing(2),
             },
             title: {
@@ -33,14 +33,20 @@ function Header(): JSX.Element {
                     <Toolbar>
                         <Button color="inherit"><NavLink className="Link" to="/vacations" exact>Vacations</NavLink></Button>
                         <Button color="inherit"><NavLink className="Link" to="/about" exact>About</NavLink></Button>
+                        <Button color="inherit"><NavLink className="Link" to="/login" exact>Login</NavLink></Button>
 
                         <Typography variant="h4" className={classes.title}>
-                            Vacationsgram
+                            VACATIONSGRAM
                         </Typography>
 
-                        <Button color="inherit"><NavLink className="Link" to="/admin" exact>Admin</NavLink></Button>
-                        <Button color="inherit"><NavLink className="Link" to="/login" exact>Login</NavLink></Button>
-                        <Button color="inherit"><NavLink className="Link" to="/register" exact>Register</NavLink></Button>
+                        <Typography>
+                            <WelcomeUser />
+                        </Typography>
+
+                        {/* <Button color="inherit"><NavLink className="Link" to="/admin" exact>Admin</NavLink></Button> */}
+                       
+
+
                     </Toolbar>
                 </AppBar>
             </div>

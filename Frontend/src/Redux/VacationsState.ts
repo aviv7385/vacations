@@ -4,6 +4,14 @@ import VacationModel from "../Components/VacationsArea/models/VacationModel";
 // Vacations App State (data)
 export class VacationsState {
     public vacations: VacationModel[] = []; // the data in the app level
+
+    // // get vacations from session storage
+    // public constructor() {
+    //     const vacations = JSON.parse(sessionStorage.getItem("vacations"));
+    //     if (vacations) {
+    //         this.vacations = vacations;
+    //     }
+    // }
 }
 
 // Action Type (what we can do with the data)
@@ -19,17 +27,6 @@ export interface VacationsAction {
     type: VacationsActionType; // the action that is being done
     payload?: any; // the data itself
 }
-
-// // Vacations Actions Creators:
-// export function vacationsDownloadedAction(vacations: VacationModel[]): VacationsAction {
-//     return (type: VacationsActionType.VacationsDownloaded, payload: vacations);
-// }
-// export function vacationAddedAction(vacation: VacationModel): VacationsAction {
-//     return (type: VacationsActionType.VacationAdded, payload: vacation);
-// }
-// export function VacationUpdatedAction(vacation: VacationModel): VacationsAction {
-//     return (type: VacationsActionType.VacationUpdated, payload: vacation);
-// }
 
 // Vacations Reducer - a function that is is being called by Redux to execute the action, and returns the new state 
 export function VacationsReducer(currentState: VacationsState = new VacationsState(), action: VacationsAction): VacationsState {
@@ -51,6 +48,8 @@ export function VacationsReducer(currentState: VacationsState = new VacationsSta
             newState.vacations.splice(indexToDelete, 1); // payload = the deleted vacation
             break;
     }
+
+    //sessionStorage.setItem("vacations", JSON.stringify(newState.vacations)); // save vacations in the session storage
 
     return newState;
 }

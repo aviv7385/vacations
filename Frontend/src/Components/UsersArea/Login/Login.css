@@ -24,3 +24,11 @@
     padding: 20px;
     width: 300px;   
 }
+
+.Login a {
+    text-decoration: none;
+}
+
+.Login a:hover {
+    color: blue;
+}

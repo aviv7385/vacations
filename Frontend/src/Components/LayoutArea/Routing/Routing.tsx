@@ -8,6 +8,9 @@ import VacationsList from "../../VacationsArea/VacationsList/VacationsList";
 import Page404 from "../Page404/Page404";
 
 function Routing(): JSX.Element {
+
+    
+
     return (
         <div className="Routing">
 			<Switch>

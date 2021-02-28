@@ -1,5 +1,6 @@
 import { Typography } from "@material-ui/core";
 import axios from "axios";
+import { History } from "history";
 import React, { Component } from "react";
 import store from "../../../Redux/Store";
 import { VacationsActionType } from "../../../Redux/VacationsState";
@@ -12,24 +13,50 @@ interface VacationsListState {
     vacations: VacationModel[];
 }
 
-class VacationsList extends Component<{}, VacationsListState> {
+interface VacationsProps {
+    history: History;
+}
 
-    public constructor(props: {}) {
+class VacationsList extends Component<VacationsProps, VacationsListState> {
+
+    public constructor(props: VacationsProps) {
         super(props);
-        this.state = { vacations: store.getState().vacations };
+        // without redux:
+        this.state = { vacations: [] }
+
+        // with redux:
+        //this.state = { vacations: store.getState().VacationsReducer.vacations };
     }
 
 
     public async componentDidMount() {
         try {
-            if (store.getState().vacations.length === 0) {
-                const response = await axios.get<VacationModel[]>(Globals.vacationsUrl); // get data from the server
-                const vacations = response.data;
-                const action = { type: VacationsActionType.VacationsDownloaded, payload: vacations };
-                store.dispatch(action);
-                this.setState({ vacations: store.getState().vacations }); // update the local state with data from the store 
-                console.log(vacations);
+            // check if user is logged-in - if yes - show vacations, if not - redirect to login page
+            if (!store.getState().user){
+                this.props.history.push("/login");
+               
             }
+
+            // check if user is Admin. if it is - redirect to Admin Component:
+            if (store.getState().user && store.getState().user.isAdmin) {
+                this.props.history.push("/admin")
+            }
+
+            // else (meaning - user is not Admin):
+            // without redux:
+            const response = await axios.get<VacationModel[]>(Globals.vacationsUrl); // get data from the server
+            const vacations = response.data;
+            this.setState({ vacations });
+
+            // with redux:
+            // if (store.getState().VacationsReducer.vacations.length === 0) {
+            //     const response = await axios.get<VacationModel[]>(Globals.vacationsUrl); // get data from the server
+            //     const vacations = response.data;
+            //     const action = { type: VacationsActionType.VacationsDownloaded, payload: vacations };
+            //     store.dispatch(action);
+            //     this.setState({ vacations: store.getState().VacationsReducer.vacations }); // update the local state with data from the store 
+            //     console.log(vacations);
+            // }
 
         }
         catch (err) {

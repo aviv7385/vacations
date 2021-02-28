@@ -18,19 +18,32 @@ class AdminVacationsList extends Component<{}, AdminVacationsListState>{
 
     public constructor(props: {}) {
         super(props);
-        this.state = { vacations: store.getState().vacations };
+
+        // without redux:
+        this.state = { vacations: [] }
+
+        // with redux:
+        //this.state = { vacations: store.getState().VacationsReducer.vacations };
     }
 
     public async componentDidMount() {
         try {
-            if (store.getState().vacations.length === 0) {
-                const response = await axios.get<VacationModel[]>(Globals.vacationsUrl); // get data from the server
-                const vacations = response.data;
-                const action = { type: VacationsActionType.VacationsDownloaded, payload: vacations };
-                store.dispatch(action);
-                this.setState({ vacations: store.getState().vacations }); // update the local state with data from the store 
-                console.log(vacations);
-            }
+
+            // get vacations without redux:
+            const response = await axios.get<VacationModel[]>(Globals.vacationsUrl); // get data from the server
+            const vacations = response.data;
+            this.setState({ vacations });
+
+
+            // with redux:
+            // if (store.getState().VacationsReducer.vacations.length === 0) {
+            //     const response = await axios.get<VacationModel[]>(Globals.vacationsUrl); // get data from the server
+            //     const vacations = response.data;
+            //     const action = { type: VacationsActionType.VacationsDownloaded, payload: vacations };
+            //     store.dispatch(action);
+            //     this.setState({ vacations: store.getState().VacationsReducer.vacations }); // update the local state with data from the store 
+            //     console.log(vacations);
+            // }
 
         }
         catch (err) {
@@ -45,11 +58,11 @@ class AdminVacationsList extends Component<{}, AdminVacationsListState>{
             <div className="AdminVacationsList">
                 <div className="VacationsList">
                     <Typography variant="h4" component="h4" color="primary">
-                    Available Vacations
+                        Available Vacations
                     </Typography>
-                    <br/>
+                    <br />
                     <Button variant="contained" color="primary">
-                        <NavLink className="Link" to="/admin/add-vacation" exact>Add New Vacation</NavLink>
+                        <NavLink to="/admin/add-vacation" exact>Add New Vacation</NavLink>
                     </Button>
 
                     <div className="Card">
