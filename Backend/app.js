@@ -18,9 +18,9 @@ server.use(cors());
 
 // When frontend requesting our server - transfer that request to the controller's router.
 server.use("/api/vacations", vacationsController);
-server.use("/api/auth", authController);
-server.use("/api/follows", followsController);
-server.use("/api/users", usersController);
+server.use("/api/vacations/auth", authController);
+server.use("/api/vacations/follows", followsController);
+server.use("/api/vacations/users", usersController);
 
 
 server.use("*", (request, response) => {

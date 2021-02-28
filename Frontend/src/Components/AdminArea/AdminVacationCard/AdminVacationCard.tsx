@@ -7,7 +7,6 @@ import "./AdminVacationCard.css";
 import VacationModel from "../../VacationsArea/models/VacationModel";
 import { NavLink } from "react-router-dom";
 
-const removeVacation = require("../DeleteVacation/DeleteVacation");
 
 
 interface AdminVacationCardProps {

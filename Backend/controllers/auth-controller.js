@@ -5,7 +5,7 @@ const router = express.Router();
 const errorsHelper = require("../helpers/errors-helper");
 const cryptoHelper = require("../helpers/crypto-helper");
 
-// POST - register new user - "api/register" (access allowed to any user)
+// POST - register new user - "api/vacations/auth/register" (access allowed to any user)
 router.post("/register", async (request, response) => {
     try {
         // check if username already exists
@@ -16,7 +16,8 @@ router.post("/register", async (request, response) => {
             response.status(201).json(newUser);
         }
         else {
-            response.status(404).send("username is taken, please choose a different one");
+            response.status(400).send("Username is taken, please choose a different one");
+            
         }
     }
     catch (err) {
@@ -24,12 +25,12 @@ router.post("/register", async (request, response) => {
     }
 });
 
-// POST - login existing user - "api/login" (access allowed to any user)
+// POST - login existing user - "api/vacations/auth/login" (access allowed to any user)
 router.post("/login", async (request, response) => {
     try {
         const loggedInUser = await authLogic.loginAsync(request.body);
         if (!loggedInUser) {
-            return response.status(401).send("Incorrect username or password.");
+            return response.status(401).send("Incorrect username or password, please try again or register");
         }
         response.json(loggedInUser);
     }

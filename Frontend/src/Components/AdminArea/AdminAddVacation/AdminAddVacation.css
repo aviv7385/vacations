@@ -7,14 +7,7 @@
     text-align: left;
 }
 
-.AdminAddVacation h2 {
-    font-size: 28pt;
-    width: fit-content;
-    margin: auto;
-    margin-top: 20px;
-}
-
-.AdminAddVacation input, .AdminAddVacation select, .AdminAddVacation button, .AdminAddVacation textarea {
+.AdminAddVacation input, .AdminAddVacation button, .AdminAddVacation textarea {
     width: 270px;
     box-sizing: border-box;
     border-radius: 5px;
@@ -31,6 +24,7 @@
 
 .AdminAddVacation button {
     margin-top: 15px;
+    padding: 10px;
 }
 
 .AdminAddVacation form {
@@ -42,7 +36,3 @@
     padding: 20px;
     width: 300px;   
 }
-
-/* .AdminAddVacation footer {
-    height: 50px;
-} */
