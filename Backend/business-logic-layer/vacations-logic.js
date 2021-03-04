@@ -43,7 +43,14 @@ async function addOneVacationAsync(vacation, image) {
 }
 
 // Update full vacation (ONLY ADMIN)
-async function updateFullVacationAsync(vacation) {
+async function updateFullVacationAsync(vacation, image) {
+    // save image to server
+    let newFileName = null;
+    if (image) {
+        const extension = image.name.substr(image.name.lastIndexOf("."));
+        newFileName = uuid.v4() + extension;
+        await image.mv("./images/" + newFileName);
+    }
     const sql = `UPDATE vacations SET 
                 destination = '${vacation.destination}',
                 description = '${vacation.description}',
@@ -53,12 +60,24 @@ async function updateFullVacationAsync(vacation) {
                 imageFileName = '${vacation.imageFileName}'
                 WHERE vacationId = ${vacation.vacationId}`;
     const info = await dal.executeAsync(sql);
+    if (image){
+        vacation.imageFileName = newFileName;
+    }
     return info.affectedRows === 0 ? null : vacation;
 }
 
 // Update partial vacation (ONLY ADMIN)
-async function updatePartialVacationAsync(vacation) {
+async function updatePartialVacationAsync(vacation, image) {
+    
+     // save image to server
+     let newFileName = null;
+     if (image) {
+         const extension = image.name.substr(image.name.lastIndexOf("."));
+         newFileName = uuid.v4() + extension;
+         await image.mv("./images/" + newFileName);
+     }
     const vacationToUpdate = await getOneVacationAsync(vacation.vacationId);
+   
     if (!vacationToUpdate) {
         return null;
     }
@@ -67,13 +86,18 @@ async function updatePartialVacationAsync(vacation) {
             vacationToUpdate[prop] = vacation[prop];
         }
     }
+    if (image){
+        vacationToUpdate.imageFileName = newFileName;
+    }
     return await updateFullVacationAsync(vacationToUpdate);
 }
 
 // Delete one vacation (ONLY ADMIN)
 async function deleteOneVacationAsync(vacationId) {
-    const sql = `DELETE FROM vacations WHERE vacationId = ${vacationId}`;
-    await dal.executeAsync(sql);
+    const sqlFollows = `DELETE FROM follows WHERE vacationId = ${vacationId}`;
+    const sqlVacations = `DELETE FROM vacations WHERE vacationId = ${vacationId}`;
+    await dal.executeAsync(sqlFollows);
+    await dal.executeAsync(sqlVacations);
 }
 
 

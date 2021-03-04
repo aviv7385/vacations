@@ -1,0 +1,37 @@
+.EditVacation label {
+	display: block;
+    font-size: 12pt;
+    margin-bottom: 5px;
+    margin-left: 15px;
+    text-align: left;
+}
+
+.EditVacation input, .EditVacation button, .EditVacation textarea {
+    width: 270px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    padding: 5px;
+    font-weight: bold;
+}
+
+.EditVacation span {
+    display: block;
+    margin-top: 5px;
+    color: red;
+    font-size: 12px;
+}
+
+.EditVacation button {
+    margin-top: 15px;
+    padding: 10px;
+}
+
+.EditVacation form {
+    display: inline-block;
+    border: 1px solid black;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px;
+    padding: 20px;
+    width: 300px;   
+}

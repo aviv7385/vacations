@@ -37,7 +37,7 @@ function AdminAddVacation(props: AdminAddVacationProps): JSX.Element {
             const response = await axios.post<VacationModel>(Globals.vacationsUrl, myFormData);
             const addedVacation = response.data;
 
-            // with redux:
+            // // with redux:
             // const action = { type: VacationsActionType.VacationAdded, payload: addedVacation };
             // store.dispatch(action);
             alert(`Vacation to ${vacation.destination} has been successfully added.`);
@@ -50,9 +50,7 @@ function AdminAddVacation(props: AdminAddVacationProps): JSX.Element {
         }
     }
 
-
     return (
-
         <div className="AdminAddVacation">
             <Typography variant="h4" component="h4" color="primary">
                 Add Vacation

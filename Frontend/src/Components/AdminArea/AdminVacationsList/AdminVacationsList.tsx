@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { Component } from "react";
+import React, { Component, SyntheticEvent } from "react";
 import store from "../../../Redux/Store";
 import { VacationsActionType } from "../../../Redux/VacationsState";
 import { Globals } from "../../../Services/Globals";
@@ -7,12 +7,13 @@ import "./AdminVacationsList.css";
 import VacationModel from "../../VacationsArea/models/VacationModel";
 import AdminVacationCard from "../AdminVacationCard/AdminVacationCard";
 import { Button, Typography } from "@material-ui/core";
-import { NavLink } from "react-router-dom";
+import { NavLink, RouteComponentProps } from "react-router-dom";
 
 
 interface AdminVacationsListState {
     vacations: VacationModel[];
 }
+
 
 class AdminVacationsList extends Component<{}, AdminVacationsListState>{
 
@@ -35,7 +36,7 @@ class AdminVacationsList extends Component<{}, AdminVacationsListState>{
             this.setState({ vacations });
 
 
-            // with redux:
+            // // get vacations with redux:
             // if (store.getState().VacationsReducer.vacations.length === 0) {
             //     const response = await axios.get<VacationModel[]>(Globals.vacationsUrl); // get data from the server
             //     const vacations = response.data;
@@ -43,8 +44,7 @@ class AdminVacationsList extends Component<{}, AdminVacationsListState>{
             //     store.dispatch(action);
             //     this.setState({ vacations: store.getState().VacationsReducer.vacations }); // update the local state with data from the store 
             //     console.log(vacations);
-            // }
-
+            //}
         }
         catch (err) {
             console.log(err);

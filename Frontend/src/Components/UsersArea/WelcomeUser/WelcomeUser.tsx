@@ -14,13 +14,14 @@ class WelcomeUser extends Component<{}, WelcomeUserState> {
 
     public constructor(props: {}) {
         super(props);
-        this.state = { userFirstName: "GUEST" };
+        this.state = { userFirstName: "GUEST" }; // without redux
+        //this.state = { userFirstName: store.getState().UserReducer.user.firstName } // with redux
     }
 
     public componentDidMount(): void {
         // start listening for changes
         this.unsubscribeStore = store.subscribe(() => {
-            this.setState({ userFirstName: store.getState().user.firstName.toLocaleUpperCase() + " " + store.getState().user.lastName.toLocaleUpperCase() })
+            this.setState({ userFirstName: store.getState().UserReducer.user.firstName.toLocaleUpperCase() + " " + store.getState().UserReducer.user.lastName.toLocaleUpperCase() })
         });
     }
 

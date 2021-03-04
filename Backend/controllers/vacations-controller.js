@@ -90,12 +90,12 @@ router.patch("/:vacationId",/*verifyAdmin,*/ async (request, response) => {
     try {
         const vacation = new Vacation(request.body);
         vacation.vacationId = +request.params.vacationId;
-        const error = vacation.validatePatch();
-        if (error) {
-            response.status(400).send(error);
-            return;
-        }
-        const updatedVacation = await vacationsLogic.updatePartialVacationAsync(vacation);
+        // const error = vacation.validatePatch();
+        // if (error) {
+        //     response.status(400).send(error);
+        //     return;
+        // }
+        const updatedVacation = await vacationsLogic.updatePartialVacationAsync(vacation, request.files ? request.files.image : null);
         if (!updatedVacation) {
             response.status(404).send(`id ${updatedVacation.vacationId} not found.`);
             return;
@@ -115,6 +115,8 @@ router.delete("/:vacationId",/*verifyAdmin,*/ async (request, response) => {
         response.sendStatus(204);
     }
     catch (err) {
+        console.log("request: " + request.body);
+        console.log("response: " + response);
         response.status(500).send(err.message);
     }
 });
