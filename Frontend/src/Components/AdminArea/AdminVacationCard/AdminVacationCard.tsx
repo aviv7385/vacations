@@ -72,7 +72,6 @@ function AdminVacationCard(props: AdminVacationCardProps): JSX.Element {
         <div className="AdminVacationCard">
             <Box m={5} component="div" display="inline-block">
                 <Card className={classes.root}>
-                    <CardActionArea>
                         <CardMedia
                             component="img"
                             alt={props.singleVacation.destination}
@@ -108,8 +107,6 @@ function AdminVacationCard(props: AdminVacationCardProps): JSX.Element {
 
                             </Typography>
                         </CardContent>
-
-                    </CardActionArea>
                 </Card>
             </Box>
         </div>

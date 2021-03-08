@@ -2,7 +2,7 @@ const dal = require("../data-access-layer/dal");
 
 // get all followed vacations by user's uuid
 async function getAllFollowedVacationsAsync(uuid) {
-    const sql = `SELECT U.username, V.destination 
+    const sql = `SELECT U.userId, V.vacationId
                 FROM follows AS F JOIN users AS U JOIN vacations AS V 
                 ON F.userId = U.userId AND F.vacationId = V.vacationId
                 WHERE U.uuid = '${uuid}'`;

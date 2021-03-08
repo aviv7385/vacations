@@ -39,10 +39,8 @@ function Header(): JSX.Element {
                             VACATIONSGRAM
                         </Typography>
 
-                        <Typography>
-                            <WelcomeUser />
-                        </Typography>
-
+                    
+                        <WelcomeUser />
                         {/* <Button color="inherit"><NavLink className="Link" to="/admin" exact>Admin</NavLink></Button> */}
                        
 

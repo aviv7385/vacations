@@ -6,9 +6,9 @@ import reportWebVitals from './reportWebVitals';
 import 'fontsource-roboto';
 
 ReactDOM.render(
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>,
+    // <React.StrictMode>
+        <App />,
+    // </React.StrictMode>,
     document.getElementById('root')
 );
 

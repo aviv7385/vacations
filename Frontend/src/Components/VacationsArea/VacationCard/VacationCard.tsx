@@ -1,17 +1,26 @@
 import { Badge, Box, Card, CardActionArea, CardContent, CardHeader, CardMedia, IconButton, makeStyles, Tooltip, Typography } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Globals } from "../../../Services/Globals";
 import VacationModel from "../models/VacationModel";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import "./VacationCard.css";
+import { RouteComponentProps } from "react-router-dom";
+import UserModel from "../../UsersArea/models/UserModel";
+import store from "../../../Redux/Store";
+import axios from "axios";
+import FollowedVacations from "../FollowedVacations/FollowedVacations";
+import FollowsModel from "../models/FollowsModel";
+
+
 
 interface VacationCardProps {
     singleVacation: VacationModel;
 }
 
 function VacationCard(props: VacationCardProps): JSX.Element {
-    // material UI card
+
+    // using material UI  for the card
     const useStyles = makeStyles({
         root: {
             maxWidth: 300,
@@ -23,11 +32,66 @@ function VacationCard(props: VacationCardProps): JSX.Element {
     const classes = useStyles();
 
 
+    const [iconColor,setIconColor] = useState("");
+    // ================================================================
+
+    const uuid = store.getState().UserReducer.user.uuid;
+    let followsArray = [{ userId: 1, vacationId: 1 }];
+    useEffect(() => {
+        // get all followed vacations (by user's uuid)
+        (async function getFollowedVacation() {
+            try {
+                const response = await axios.get<FollowsModel[]>(Globals.vacationsUrl + `follows/${uuid}`);
+                followsArray = response.data;
+                console.log(followsArray);
+            }
+            catch (err) {
+                console.log(err)
+                console.log(err.message);
+                alert("Error!");
+            }
+        })();
+    });
+
+
+
+    // follow a vacation (add new follow) or unfollow it
+    async function followVacation() {
+        try {
+            
+            const follow = new FollowsModel();
+            follow.vacationId = props.singleVacation.vacationId;
+            follow.userId = store.getState().UserReducer.user.userId;
+            console.log(follow);
+            console.log(followsArray);
+            for (const obj of followsArray) {
+                if (follow.vacationId === obj.vacationId) {
+                    console.log(follow.vacationId)
+                    await axios.delete<FollowsModel>(Globals.vacationsUrl + `follows/${store.getState().UserReducer.user.uuid}/${props.singleVacation.vacationId}/`);
+                    alert(`vacation ${follow.vacationId} was unfollowed`);
+                    setIconColor("");
+                    return;
+                }
+                break;
+            }
+            await axios.post<FollowsModel>(Globals.vacationsUrl + "follows/", follow);
+            alert(`vacation ${follow.vacationId} is now followed`);
+            console.log("updated: " + followsArray);
+            setIconColor("secondary");
+        }
+        catch (err) {
+            console.log(err)
+            console.log(err.message);
+            alert("Error!");
+        }
+    }
+
+
     return (
         <div className="VacationCard">
             <Box m={5} component="div" display="inline-block">
                 <Card className={classes.root}>
-                    <CardActionArea>
+                    {/* <CardActionArea> */}
                         <CardMedia
                             component="img"
                             alt={props.singleVacation.destination}
@@ -38,8 +102,8 @@ function VacationCard(props: VacationCardProps): JSX.Element {
                         <CardHeader
                             action={
                                 <Tooltip title="Follow">
-                                    <IconButton aria-label="settings">
-                                        <FavoriteBorderIcon />
+                                    <IconButton aria-label="settings" onClick={followVacation} style={{color:iconColor}} >
+                                        <FavoriteIcon  />
                                     </IconButton>
                                 </Tooltip>
                             }
@@ -62,7 +126,7 @@ function VacationCard(props: VacationCardProps): JSX.Element {
                             </Typography>
                         </CardContent>
 
-                    </CardActionArea>
+                    {/* </CardActionArea> */}
                 </Card>
             </Box>
 

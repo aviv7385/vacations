@@ -1,6 +1,7 @@
 import { Component } from "react";
 import { Unsubscribe } from "redux";
 import store from "../../../Redux/Store";
+import Typography from '@material-ui/core/Typography';
 import "./WelcomeUser.css";
 
 
@@ -14,8 +15,12 @@ class WelcomeUser extends Component<{}, WelcomeUserState> {
 
     public constructor(props: {}) {
         super(props);
-        this.state = { userFirstName: "GUEST" }; // without redux
-        //this.state = { userFirstName: store.getState().UserReducer.user.firstName } // with redux
+        if(store.getState().UserReducer.user) {
+            this.state = { userFirstName: store.getState().UserReducer.user.firstName.toLocaleUpperCase() + " " + store.getState().UserReducer.user.lastName.toLocaleUpperCase() } // with redux
+        }
+        else {
+            this.state = { userFirstName: "GUEST" }; // without redux
+        }
     }
 
     public componentDidMount(): void {
@@ -23,13 +28,15 @@ class WelcomeUser extends Component<{}, WelcomeUserState> {
         this.unsubscribeStore = store.subscribe(() => {
             this.setState({ userFirstName: store.getState().UserReducer.user.firstName.toLocaleUpperCase() + " " + store.getState().UserReducer.user.lastName.toLocaleUpperCase() })
         });
+        
     }
 
     public render(): JSX.Element {
         return (
             <div className="WelcomeUser">
+                <Typography>
                 <span>HELLO {this.state.userFirstName}</span>
-
+                </Typography>
             </div>
         );
     }

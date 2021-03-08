@@ -10,18 +10,18 @@ import Page404 from "../Page404/Page404";
 
 function Routing(): JSX.Element {
 
-    
+
 
     return (
         <div className="Routing">
-			<Switch>
+            <Switch>
+                <Route path="/login" component={Login} exact />
                 <Route path="/vacations" component={VacationsList} exact />
                 <Route path="/admin" component={AdminVacationsList} exact />
                 <Route path="/admin/add-vacation" component={AdminAddVacation} exact />
                 <Route path="/admin/edit-vacation/:vacationId" component={EditVacation} exact />
                 <Route path="/register" component={Register} exact />
-                <Route path="/login" component={Login} exact />
-                <Redirect from="/" to="/vacations" exact />
+                <Redirect from="/" to="/login" exact />
                 <Route component={Page404} />
             </Switch>
         </div>

@@ -15,6 +15,7 @@ interface VacationsListState {
 
 interface VacationsProps {
     history: History;
+    isMounted: boolean;
 }
 
 class VacationsList extends Component<VacationsProps, VacationsListState> {
@@ -30,25 +31,15 @@ class VacationsList extends Component<VacationsProps, VacationsListState> {
 
 
     public async componentDidMount() {
+     
         try {
-            // check if user is logged-in - if yes - show vacations, if not - redirect to login page
-            if (!store.getState().UserReducer.user) {
-                this.props.history.push("/login");
-
-            }
-
-            // check if user is Admin. if it is - redirect to Admin Component:
-            if (store.getState().UserReducer.user && store.getState().UserReducer.user.isAdmin) {
-                this.props.history.push("/admin")
-            }
-
-            // else (meaning - user is not Admin):
 
             // without redux:
             const response = await axios.get<VacationModel[]>(Globals.vacationsUrl); // get data from the server
             const vacations = response.data;
             this.setState({ vacations });
 
+    
             // // with redux:
             // if (store.getState().VacationsReducer.vacations.length === 0) {
             //     const response = await axios.get<VacationModel[]>(Globals.vacationsUrl); // get data from the server
@@ -66,6 +57,8 @@ class VacationsList extends Component<VacationsProps, VacationsListState> {
             alert("Error");
         }
     }
+
+
 
     public render(): JSX.Element {
         return (

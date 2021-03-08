@@ -5,13 +5,16 @@ import UserModel from "../Components/UsersArea/models/UserModel";
 export class UserState {
     public user: UserModel; // the data in the app level
 
-    // get the user object from session storage 
-    // public constructor() {
-    //     const user = JSON.parse(sessionStorage.getItem("user"));
-    //     if (user) {
-    //         this.user = user;
-    //     }
-    // }
+   // get the user object from session storage 
+    public constructor() {
+        if(sessionStorage.getItem("user") == "undefined") {
+            sessionStorage.setItem("user", null);
+        }
+        const user = JSON.parse(sessionStorage.getItem("user"));
+        if (user) {
+            this.user = user;
+        }
+    }
 }
 
 // Action Type (what we can do with the data)
@@ -40,7 +43,7 @@ export function UserReducer(currentState: UserState = new UserState(), action: U
     }
 
     // save the user object to session storage
-    //sessionStorage.setItem("user", JSON.stringify(newState.user));
+    sessionStorage.setItem("user", JSON.stringify(newState.user));
 
     return newState;
 }

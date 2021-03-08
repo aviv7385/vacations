@@ -6,15 +6,25 @@ import { useForm } from "react-hook-form";
 import { Globals } from "../../../Services/Globals";
 import UserModel from "../models/UserModel";
 import "./Login.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { UserActionType } from "../../../Redux/UserState";
 import store from "../../../Redux/Store";
 
-interface LoginProps {
-    history: History;
-}
 
-function Login(props: LoginProps): JSX.Element {
+
+function Login(): JSX.Element {
+
+    const history = useHistory();
+
+    // check if user is logged-in - if yes - show vacations, if not - redirect to login page
+    if (store.getState().UserReducer.user) {
+        if (store.getState().UserReducer.user.isAdmin) {
+            history.push("/admin");
+        }
+        else {
+            history.push("/vacations");
+        }
+    }
     // create form
     const { register, handleSubmit, errors } = useForm<UserModel>();
 
@@ -27,15 +37,18 @@ function Login(props: LoginProps): JSX.Element {
             store.dispatch(action);
 
             alert("You have successfully logged in!");
-            props.history.push("/vacations");
+            if (store.getState().UserReducer.user.isAdmin) {
+                history.push("/admin");
+            }
+            else {
+                history.push("/vacations");
+            }
         }
         catch (err) {
             console.log(err);
             alert("Incorrect username or password\nPlease try again or register");
         }
     }
-
-
 
     return (
         <div className="Login">

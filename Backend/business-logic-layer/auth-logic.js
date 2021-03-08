@@ -16,7 +16,7 @@ async function registerAsync(user) {
                 VALUES(DEFAULT, '${user.uuid}', '${user.firstName}', 
                 '${user.lastName}', '${user.username}', '${user.password}', DEFAULT)`;
     const info = await dal.executeAsync(sql);
-    user.id = info.insertId;
+    user.userId = info.insertId;
 
     // Delete the password: 
     delete user.password;
@@ -34,7 +34,7 @@ async function loginAsync(credentials) {
     // Hash user password: 
     credentials.password = cryptoHelper.hash(credentials.password);
 
-    const sql = `SELECT uuid, firstName, lastName, username, isAdmin FROM users 
+    const sql = `SELECT userId, uuid, firstName, lastName, username, isAdmin FROM users 
                 WHERE username = '${credentials.username}' AND password = '${credentials.password}'`;
     const users = await dal.executeAsync(sql);
     if (users.length === 0) {
