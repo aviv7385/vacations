@@ -5,21 +5,21 @@ import VacationModel from "../Components/VacationsArea/models/VacationModel";
 export class VacationsState {
     public vacations: VacationModel[] = []; // the data in the app level
 
-    // // get vacations from session storage
-    // public constructor() {
-    //     const vacations = JSON.parse(sessionStorage.getItem("vacations"));
-    //     if (vacations) {
-    //         this.vacations = vacations;
-    //     }
-    // }
+    // get vacations from session storage
+    public constructor() {
+        const vacations = JSON.parse(sessionStorage.getItem("vacations"));
+        if (vacations) {
+            this.vacations = vacations;
+        }
+    }
 }
 
 // Action Type (what we can do with the data)
 export enum VacationsActionType {
-    VacationsDownloaded,
-    VacationAdded,
-    VacationUpdated,
-    VacationDeleted
+    VacationsDownloaded = "VacationsDownloaded",
+    VacationAdded = "VacationAdded",
+    VacationUpdated = "VacationUpdated",
+    VacationDeleted = "VacationDeleted"
 }
 
 // Action (an obj that describes the action we want to execute)
@@ -49,7 +49,7 @@ export function VacationsReducer(currentState: VacationsState = new VacationsSta
             break;
     }
 
-    //sessionStorage.setItem("vacations", JSON.stringify(newState.vacations)); // save vacations in the session storage
+    sessionStorage.setItem("vacations", JSON.stringify(newState.vacations)); // save vacations in the session storage
 
     return newState;
 }

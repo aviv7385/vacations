@@ -4,6 +4,7 @@ const Vacation = require("../models/vacation");
 const vacationsLogic = require("../business-logic-layer/vacations-logic");
 const verifyLoggedIn = require("../middleware/verify-logged-in");
 const verifyAdmin = require("../middleware/verify-admin");
+const socketHelper = require("../helpers/socket-io-helper");
 
 const router = express.Router(); // Only the routing mechanism for our controller.
 
@@ -57,6 +58,8 @@ router.post("/", /*verifyAdmin,*/ async (request, response) => {
         // }
         const addedVacation = await vacationsLogic.addOneVacationAsync(vacation, request.files ? request.files.image : null);
         response.status(201).json(addedVacation);
+        // send socket.io added message to front
+        socketHelper.vacationAdded(addedVacation);
     }
     catch (err) {
         response.status(500).send(err.message);
@@ -79,6 +82,9 @@ router.put("/:vacationId",/*verifyAdmin,*/ async (request, response) => {
             return;
         }
         response.json(updatedVacation);
+
+        // send socket.io updated message to front
+        socketHelper.vacationUpdated(updatedVacation);
     }
     catch (err) {
         response.status(500).send(err.message);
@@ -90,11 +96,6 @@ router.patch("/:vacationId",/*verifyAdmin,*/ async (request, response) => {
     try {
         const vacation = new Vacation(request.body);
         vacation.vacationId = +request.params.vacationId;
-        // const error = vacation.validatePatch();
-        // if (error) {
-        //     response.status(400).send(error);
-        //     return;
-        // }
         const updatedVacation = await vacationsLogic.updatePartialVacationAsync(vacation, request.files ? request.files.image : null);
         if (!updatedVacation) {
             response.status(404).send(`id ${updatedVacation.vacationId} not found.`);
@@ -113,6 +114,9 @@ router.delete("/:vacationId",/*verifyAdmin,*/ async (request, response) => {
         const vacationId = +request.params.vacationId;
         await vacationsLogic.deleteOneVacationAsync(vacationId);
         response.sendStatus(204);
+
+        // send socket.io deleted message to front
+        socketHelper.vacationDeleted(vacationId);
     }
     catch (err) {
         console.log("request: " + request.body);

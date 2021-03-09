@@ -37,7 +37,7 @@ async function addOneVacationAsync(vacation, image) {
                 VALUES (DEFAULT, '${vacation.destination}', '${vacation.description}', 
                 '${vacation.fromDate}', '${vacation.toDate}', ${vacation.price}, '${newFileName}')`;
     const info = await dal.executeAsync(sql);
-    vacation.id = info.insertId;
+    vacation.vacationId = info.insertId;
     vacation.imageFileName = newFileName;
     return vacation;
 }

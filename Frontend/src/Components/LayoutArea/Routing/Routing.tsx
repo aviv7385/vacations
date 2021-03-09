@@ -4,6 +4,7 @@ import AdminAddVacation from "../../AdminArea/AdminAddVacation/AdminAddVacation"
 import AdminVacationsList from "../../AdminArea/AdminVacationsList/AdminVacationsList";
 import EditVacation from "../../AdminArea/EditVacation/EditVacation";
 import Login from "../../UsersArea/Login/Login";
+import Logout from "../../UsersArea/Logout/Logout";
 import Register from "../../UsersArea/Register/Register";
 import VacationsList from "../../VacationsArea/VacationsList/VacationsList";
 import Page404 from "../Page404/Page404";
@@ -16,6 +17,7 @@ function Routing(): JSX.Element {
         <div className="Routing">
             <Switch>
                 <Route path="/login" component={Login} exact />
+                <Route path="/logout" component={Logout} exact />
                 <Route path="/vacations" component={VacationsList} exact />
                 <Route path="/admin" component={AdminVacationsList} exact />
                 <Route path="/admin/add-vacation" component={AdminAddVacation} exact />

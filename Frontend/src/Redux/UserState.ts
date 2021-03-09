@@ -3,11 +3,11 @@ import UserModel from "../Components/UsersArea/models/UserModel";
 
 // Vacations App State (data)
 export class UserState {
-    public user: UserModel; // the data in the app level
+    public user: UserModel = null; // the data in the app level
 
-   // get the user object from session storage 
+    // get the user object from session storage 
     public constructor() {
-        if(sessionStorage.getItem("user") == "undefined") {
+        if (sessionStorage.getItem("user") == "undefined") {
             sessionStorage.setItem("user", null);
         }
         const user = JSON.parse(sessionStorage.getItem("user"));
@@ -19,8 +19,9 @@ export class UserState {
 
 // Action Type (what we can do with the data)
 export enum UserActionType {
-    UserRegistered,
-    UserLoggedIn
+    UserRegistered = "UserRegistered",
+    UserLoggedIn = "UserLoggedIn",
+    UserLoggedOut = "UserLoggedOut"
 }
 
 // Action (an obj that describes the action we want to execute)
@@ -40,6 +41,8 @@ export function UserReducer(currentState: UserState = new UserState(), action: U
         case UserActionType.UserLoggedIn:
             newState.user = action.payload; // payload = the logged-in user
             break;
+        case UserActionType.UserLoggedOut:
+            newState.user = null;
     }
 
     // save the user object to session storage

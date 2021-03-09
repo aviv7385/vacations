@@ -35,23 +35,23 @@ function VacationCard(props: VacationCardProps): JSX.Element {
     const [iconColor,setIconColor] = useState("");
     // ================================================================
 
-    const uuid = store.getState().UserReducer.user.uuid;
+    
     let followsArray = [{ userId: 1, vacationId: 1 }];
-    useEffect(() => {
-        // get all followed vacations (by user's uuid)
-        (async function getFollowedVacation() {
-            try {
-                const response = await axios.get<FollowsModel[]>(Globals.vacationsUrl + `follows/${uuid}`);
-                followsArray = response.data;
-                console.log(followsArray);
-            }
-            catch (err) {
-                console.log(err)
-                console.log(err.message);
-                alert("Error!");
-            }
-        })();
-    });
+    // useEffect(() => {
+    //     // get all followed vacations (by user's id)
+    //     (async function getFollowedVacation() {
+    //         try {
+    //             const response = await axios.get<FollowsModel[]>(Globals.vacationsUrl + `follows/${store.getState().UserReducer.user.userId}`);
+    //             followsArray = response.data;
+    //             console.log(followsArray);
+    //         }
+    //         catch (err) {
+    //             console.log(err)
+    //             console.log(err.message);
+    //             alert("Error!");
+    //         }
+    //     })();
+    // });
 
 
 

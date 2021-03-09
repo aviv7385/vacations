@@ -9,6 +9,8 @@ import "./Login.css";
 import { NavLink, useHistory } from "react-router-dom";
 import { UserActionType } from "../../../Redux/UserState";
 import store from "../../../Redux/Store";
+import { socketManagerInstance } from "../../../Socket.io/SocketManager";
+
 
 
 
@@ -17,7 +19,7 @@ function Login(): JSX.Element {
     const history = useHistory();
 
     // check if user is logged-in - if yes - show vacations, if not - redirect to login page
-    if (store.getState().UserReducer.user) {
+    if (store.getState().UserReducer.user !== null) {
         if (store.getState().UserReducer.user.isAdmin) {
             history.push("/admin");
         }
@@ -37,6 +39,10 @@ function Login(): JSX.Element {
             store.dispatch(action);
 
             alert("You have successfully logged in!");
+
+            // connect to socket.io:
+            socketManagerInstance.connect();
+            
             if (store.getState().UserReducer.user.isAdmin) {
                 history.push("/admin");
             }
@@ -66,7 +72,7 @@ function Login(): JSX.Element {
                 <button>Submit</button> <br /><br />
 
                 <Typography variant="body1" component="h6" color="primary">
-                    Not a member yet? Register <NavLink to="/register" exact>here</NavLink>
+                <NavLink to="/register" exact>Not a member yet? Register here</NavLink>
                 </Typography>
             </form>
         </div>

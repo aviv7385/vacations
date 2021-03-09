@@ -2,6 +2,7 @@ import { Typography } from "@material-ui/core";
 import axios from "axios";
 import { History } from "history";
 import React, { Component } from "react";
+import { Unsubscribe } from "redux";
 import store from "../../../Redux/Store";
 import { VacationsActionType } from "../../../Redux/VacationsState";
 import { Globals } from "../../../Services/Globals";
@@ -15,40 +16,43 @@ interface VacationsListState {
 
 interface VacationsProps {
     history: History;
-    isMounted: boolean;
 }
 
 class VacationsList extends Component<VacationsProps, VacationsListState> {
 
+    private unsubscribeFromStore: Unsubscribe;
+
     public constructor(props: VacationsProps) {
         super(props);
-        // without redux:
-        this.state = { vacations: [] }
 
         // with redux:
-        //this.state = { vacations: store.getState().VacationsReducer.vacations };
+        this.state = { vacations: store.getState().VacationsReducer.vacations };
     }
 
 
     public async componentDidMount() {
-     
+
         try {
+            // get all vacations:
+            this.unsubscribeFromStore = store.subscribe(() => {
+                this.setState({ vacations: store.getState().VacationsReducer.vacations });
+            });
 
-            // without redux:
-            const response = await axios.get<VacationModel[]>(Globals.vacationsUrl); // get data from the server
-            const vacations = response.data;
-            this.setState({ vacations });
+            if (store.getState().UserReducer.user !== null) {
 
-    
-            // // with redux:
-            // if (store.getState().VacationsReducer.vacations.length === 0) {
-            //     const response = await axios.get<VacationModel[]>(Globals.vacationsUrl); // get data from the server
-            //     const vacations = response.data;
-            //     const action = { type: VacationsActionType.VacationsDownloaded, payload: vacations };
-            //     store.dispatch(action);
-            //     this.setState({ vacations: store.getState().VacationsReducer.vacations }); // update the local state with data from the store 
-            //     console.log(vacations);
-            // }
+                if (store.getState().VacationsReducer.vacations.length === 0) {
+                    const response = await axios.get<VacationModel[]>(Globals.vacationsUrl); // get data from the server
+                    const vacations = response.data;
+                    const action = { type: VacationsActionType.VacationsDownloaded, payload: vacations };
+                    store.dispatch(action);
+                    //this.setState({ vacations: store.getState().VacationsReducer.vacations }); // update the local state with data from the store 
+                    console.log(vacations);
+                }
+            }
+            else {
+                alert("You need to log in first");
+                this.props.history.push("/login");
+            }
 
         }
         catch (err) {
@@ -57,8 +61,6 @@ class VacationsList extends Component<VacationsProps, VacationsListState> {
             alert("Error");
         }
     }
-
-
 
     public render(): JSX.Element {
         return (
@@ -73,6 +75,12 @@ class VacationsList extends Component<VacationsProps, VacationsListState> {
             </div>
         );
     }
+
+    public componentWillUnmount(): void {
+        this.unsubscribeFromStore();
+    }
 }
+
+
 
 export default VacationsList;

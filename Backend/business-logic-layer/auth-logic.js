@@ -34,7 +34,7 @@ async function loginAsync(credentials) {
     // Hash user password: 
     credentials.password = cryptoHelper.hash(credentials.password);
 
-    const sql = `SELECT userId, uuid, firstName, lastName, username, isAdmin FROM users 
+    const sql = `SELECT uuid, firstName, lastName, username, isAdmin FROM users 
                 WHERE username = '${credentials.username}' AND password = '${credentials.password}'`;
     const users = await dal.executeAsync(sql);
     if (users.length === 0) {

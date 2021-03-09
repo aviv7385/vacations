@@ -7,6 +7,8 @@ import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import axios from "axios";
 import { Globals } from "../../../Services/Globals";
+import { VacationsActionType } from "../../../Redux/VacationsState";
+import store from "../../../Redux/Store";
 
 interface MatchParams {
     vacationId: string;
@@ -55,6 +57,10 @@ function EditVacation(props: EditVacationProps): JSX.Element {
             myFormData.append("price", vacation.price.toString());
             myFormData.append("image", vacation.image.item(0));
             const response = await axios.patch<VacationModel>(Globals.vacationsUrl + props.match.params.vacationId, myFormData);
+
+            // with redux:
+            const action = { type: VacationsActionType.VacationUpdated, payload: response.data };
+            store.dispatch(action);
             alert(`Vacation to ${vacation.destination} has been successfully updated.`);
             props.history.push("/admin");
         }

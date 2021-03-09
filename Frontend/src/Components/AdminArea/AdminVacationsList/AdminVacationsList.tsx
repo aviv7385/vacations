@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { Component, SyntheticEvent } from "react";
 import store from "../../../Redux/Store";
+import { History } from "history";
 import { VacationsActionType } from "../../../Redux/VacationsState";
 import { Globals } from "../../../Services/Globals";
 import "./AdminVacationsList.css";
@@ -8,43 +9,52 @@ import VacationModel from "../../VacationsArea/models/VacationModel";
 import AdminVacationCard from "../AdminVacationCard/AdminVacationCard";
 import { Button, Typography } from "@material-ui/core";
 import { NavLink, RouteComponentProps } from "react-router-dom";
+import { Unsubscribe } from "redux";
 
 
 interface AdminVacationsListState {
     vacations: VacationModel[];
 }
+interface AdminVacationsProps {
+    history: History;
+}
 
 
-class AdminVacationsList extends Component<{}, AdminVacationsListState>{
+class AdminVacationsList extends Component<AdminVacationsProps, AdminVacationsListState>{
 
-    public constructor(props: {}) {
+    private unsubscribeFromStore: Unsubscribe;
+
+    public constructor(props: AdminVacationsProps) {
         super(props);
 
-        // without redux:
-        this.state = { vacations: [] }
-
         // with redux:
-        //this.state = { vacations: store.getState().VacationsReducer.vacations };
+        this.state = { vacations: store.getState().VacationsReducer.vacations };
     }
 
     public async componentDidMount() {
         try {
+            // get all vacations:
+            this.unsubscribeFromStore = store.subscribe(() => {
+                this.setState({ vacations: store.getState().VacationsReducer.vacations });
+            });
 
-            // get vacations without redux:
-            const response = await axios.get<VacationModel[]>(Globals.vacationsUrl); // get data from the server
-            const vacations = response.data;
-            this.setState({ vacations });
+            if (store.getState().UserReducer.user !== null) {
 
 
-            // // get vacations with redux:
-            // if (store.getState().VacationsReducer.vacations.length === 0) {
-            //     const response = await axios.get<VacationModel[]>(Globals.vacationsUrl); // get data from the server
-            //     const vacations = response.data;
-            //     const action = { type: VacationsActionType.VacationsDownloaded, payload: vacations };
-            //     store.dispatch(action);
-            //     this.setState({ vacations: store.getState().VacationsReducer.vacations }); // update the local state with data from the store 
-            //     console.log(vacations);
-            //}
+                if (store.getState().VacationsReducer.vacations.length === 0) {
+                    const response = await axios.get<VacationModel[]>(Globals.vacationsUrl); // get data from the server
+                    const vacations = response.data;
+                    const action = { type: VacationsActionType.VacationsDownloaded, payload: vacations };
+                    store.dispatch(action);
+                    //this.setState({ vacations: store.getState().VacationsReducer.vacations }); // update the local state with data from the store 
+                    console.log(vacations);
+                }
+
+            }
+            else {
+                alert("You need to log in first");
+                this.props.history.push("/login");
+            }
         }
         catch (err) {
             console.log(err);
@@ -71,6 +81,9 @@ class AdminVacationsList extends Component<{}, AdminVacationsListState>{
                 </div>
             </div>
         );
+    }
+    public componentWillUnmount(): void {
+        this.unsubscribeFromStore();
     }
 }
 

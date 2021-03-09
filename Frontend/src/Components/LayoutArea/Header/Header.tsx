@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import { NavLink } from "react-router-dom";
 import "./Header.css";
 import WelcomeUser from '../../UsersArea/WelcomeUser/WelcomeUser';
+import store from '../../../Redux/Store';
 
 
 function Header(): JSX.Element {
@@ -32,8 +33,10 @@ function Header(): JSX.Element {
                 <AppBar position="static">
                     <Toolbar>
                         <Button color="inherit"><NavLink className="Link" to="/vacations" exact>Vacations</NavLink></Button>
-                        <Button color="inherit"><NavLink className="Link" to="/about" exact>About</NavLink></Button>
                         <Button color="inherit"><NavLink className="Link" to="/login" exact>Login</NavLink></Button>
+                        
+                        {store.getState().UserReducer.user !== null && <Button color="inherit"><NavLink className="Link" to="/logout" exact>Logout</NavLink></Button>}
+                        
 
                         <Typography variant="h4" className={classes.title}>
                             VACATIONSGRAM
@@ -41,7 +44,6 @@ function Header(): JSX.Element {
 
                     
                         <WelcomeUser />
-                        {/* <Button color="inherit"><NavLink className="Link" to="/admin" exact>Admin</NavLink></Button> */}
                        
 
 

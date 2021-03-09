@@ -6,10 +6,10 @@ export class FollowsState {
 
 // Action Type (what we can do with the data)
 export enum FollowsActionType {
-    FollowsDownloaded,
-    FollowAdded,
-    FollowsTotalCount,
-    FollowDeleted
+    FollowsDownloaded = "FollowsDownloaded",
+    FollowAdded = "FollowAdded",
+    FollowsTotalCount = "FollowsTotalCount",
+    FollowDeleted = "FollowDeleted"
 }
 
 // Action (an obj that describes the action we want to execute)

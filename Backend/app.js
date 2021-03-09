@@ -5,6 +5,7 @@ const vacationsController = require("./controllers/vacations-controller");
 const authController = require("./controllers/auth-controller");
 const followsController = require("./controllers/follows-controller");
 const usersController = require("./controllers/users-controllers");
+const socketHelper = require("./helpers/socket-io-helper");
 const cors = require("cors");
 
 const server = express(); // Create the entire server.
@@ -27,4 +28,6 @@ server.use("*", (request, response) => {
     response.status(404).send("Route not found");
 });
 
-server.listen(3001, () => console.log("Listening..."));
+
+const expressListener = server.listen(3001, () => console.log("Listening..."));
+socketHelper.init(expressListener);

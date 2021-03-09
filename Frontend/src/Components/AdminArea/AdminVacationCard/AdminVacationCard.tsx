@@ -7,6 +7,8 @@ import "./AdminVacationCard.css";
 import VacationModel from "../../VacationsArea/models/VacationModel";
 import { NavLink, useHistory } from "react-router-dom";
 import axios from "axios";
+import { VacationsActionType } from "../../../Redux/VacationsState";
+import store from "../../../Redux/Store";
 
 
 
@@ -59,6 +61,9 @@ function AdminVacationCard(props: AdminVacationCardProps): JSX.Element {
                 return;
             }
             await axios.delete<VacationModel>(Globals.vacationsUrl + vacationId);
+            // with redux:
+            const action = { type: VacationsActionType.VacationDeleted, payload: vacationId };
+            store.dispatch(action);
             history.push("/admin");
         }
         catch (err) {
@@ -72,41 +77,41 @@ function AdminVacationCard(props: AdminVacationCardProps): JSX.Element {
         <div className="AdminVacationCard">
             <Box m={5} component="div" display="inline-block">
                 <Card className={classes.root}>
-                        <CardMedia
-                            component="img"
-                            alt={props.singleVacation.destination}
-                            className={classes.media}
-                            image={Globals.vacationsUrl + "images/" + props.singleVacation.imageFileName}
-                            title={props.singleVacation.destination}
-                        />
-                        <CardHeader
-                            title={props.singleVacation.destination}
-                        />
+                    <CardMedia
+                        component="img"
+                        alt={props.singleVacation.destination}
+                        className={classes.media}
+                        image={Globals.vacationsUrl + "images/" + props.singleVacation.imageFileName}
+                        title={props.singleVacation.destination}
+                    />
+                    <CardHeader
+                        title={props.singleVacation.destination}
+                    />
 
-                        <CardContent>
-                            <Typography variant="body1" color="textSecondary" component="p" align="left">
-                                {props.singleVacation.description} <br />
+                    <CardContent>
+                        <Typography variant="body1" color="textSecondary" component="p" align="left">
+                            {props.singleVacation.description} <br />
                                 From: {props.singleVacation.fromDate} <br />
                                 To: {props.singleVacation.toDate} <br />
                                 Price: ${props.singleVacation.price} <br />
-                            </Typography>
-                            <Typography component="p" align="right">
-                                <IconButton aria-label="settings" >
-                                    <NavLink className="Icon" to={"/admin/edit-vacation/" + props.singleVacation.vacationId}>
-                                        <Tooltip title="Edit">
-                                            <EditOutlinedIcon fontSize="small" />
-                                        </Tooltip>
-                                    </NavLink>
-                                </IconButton>
-
-                                <IconButton aria-label="settings" onClick={removeVacation}>
-                                    <Tooltip title="Delete">
-                                        <DeleteOutlineOutlinedIcon fontSize="small" />
+                        </Typography>
+                        <Typography component="p" align="right">
+                            <IconButton aria-label="settings" >
+                                <NavLink className="Icon" to={"/admin/edit-vacation/" + props.singleVacation.vacationId}>
+                                    <Tooltip title="Edit">
+                                        <EditOutlinedIcon fontSize="small" />
                                     </Tooltip>
-                                </IconButton>
+                                </NavLink>
+                            </IconButton>
 
-                            </Typography>
-                        </CardContent>
+                            <IconButton aria-label="settings" onClick={removeVacation}>
+                                <Tooltip title="Delete">
+                                    <DeleteOutlineOutlinedIcon fontSize="small" />
+                                </Tooltip>
+                            </IconButton>
+
+                        </Typography>
+                    </CardContent>
                 </Card>
             </Box>
         </div>

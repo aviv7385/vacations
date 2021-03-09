@@ -33,14 +33,12 @@ router.post("/", async (request, response) => {
     }
 });
 
-// DELETE - remove a follow from a vacation - /api/follows/:uuid/:vacationId
-router.delete("/:uuid/:vacationId", async (request, response) => {
+// DELETE - remove a follow from a vacation - /api/vacations/follows/:userId/:vacationId
+router.delete("/:userId/:vacationId", async (request, response) => {
     try {
         const vacationId = +request.params.vacationId;
-        const uuid = request.params.uuid;
-        const users = await usersLogic.getAllUsersAsync();
-        const user = users.find(u =>  u.uuid === uuid );
-        await followsLogic.removeFollowAsync(user.userId, vacationId);
+        const userId = +request.params.userId;
+        await followsLogic.removeFollowAsync(userId, vacationId);
 
         response.sendStatus(204);
     }
