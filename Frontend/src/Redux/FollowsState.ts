@@ -34,8 +34,8 @@ export function FollowsReducer(currentState: FollowsState = new FollowsState(), 
             newState.followedVacations.splice(indexToDelete, 1); // payload = the removed follow
             break;
         // case FollowsActionType.FollowsTotalCount:
-        //     const vacationId = newState.followedVacations.find(f => f.vacationId === action.payload);
-
+        //     newState.followsCounts = action.payload;
+        //     break;
     }
     return newState;
 }

@@ -1,10 +1,13 @@
 global.config = require(process.env.NODE_ENV === "production" ? "./config-prod.json" : "./config-dev.json");
 const express = require("express");
 const fileUpload = require("express-fileupload");
+const verifyAdmin = require("./middleware/verify-admin");
+const verifyLoggedIn = require("./middleware/verify-logged-in");
 const vacationsController = require("./controllers/vacations-controller");
 const authController = require("./controllers/auth-controller");
 const followsController = require("./controllers/follows-controller");
 const usersController = require("./controllers/users-controllers");
+const adminController = require("./controllers/admin-controller");
 const socketHelper = require("./helpers/socket-io-helper");
 const cors = require("cors");
 
@@ -22,7 +25,7 @@ server.use("/api/vacations", vacationsController);
 server.use("/api/vacations/auth", authController);
 server.use("/api/vacations/follows", followsController);
 server.use("/api/vacations/users", usersController);
-
+server.use("/api/admin/vacations", adminController);
 
 server.use("*", (request, response) => {
     response.status(404).send("Route not found");

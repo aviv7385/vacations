@@ -25,7 +25,7 @@ async function removeFollowAsync(userId, vacationId) {
 
 // get number of follow a vacation has 
 async function getNumberOfFollowsAsync(vacationId) {
-    const sql = `SELECT COUNT(F.vacationId) AS 'Number Of Follows', V.vacationId, V.destination
+    const sql = `SELECT COUNT(F.vacationId) AS 'followersCount', V.vacationId, V.destination
                 FROM follows AS F JOIN vacations AS V
                 ON F.vacationId = V.vacationId
                 WHERE F.vacationId = ${vacationId}`;

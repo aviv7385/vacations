@@ -34,7 +34,11 @@ function AdminAddVacation(props: AdminAddVacationProps): JSX.Element {
             myFormData.append("toDate", vacation.toDate);
             myFormData.append("price", vacation.price.toString());
             myFormData.append("image", vacation.image.item(0));
-            const response = await axios.post<VacationModel>(Globals.vacationsUrl, myFormData);
+            const response = await axios.post<VacationModel>(Globals.adminUrl, myFormData, { // get data from the server
+                headers: { //send token header
+                    'Authorization': `token ${store.getState().UserReducer.user.token}`
+                }
+            });
             const addedVacation = response.data;
 
             // with redux:

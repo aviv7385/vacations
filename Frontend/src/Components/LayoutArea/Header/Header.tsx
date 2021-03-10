@@ -4,13 +4,15 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import { NavLink } from "react-router-dom";
+import { NavLink, Route, useHistory } from "react-router-dom";
 import "./Header.css";
 import WelcomeUser from '../../UsersArea/WelcomeUser/WelcomeUser';
 import store from '../../../Redux/Store';
+import Logout from '../../UsersArea/Logout/Logout';
 
 
 function Header(): JSX.Element {
+    const history = useHistory();
     // tool bar
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
@@ -35,7 +37,7 @@ function Header(): JSX.Element {
                         <Button color="inherit"><NavLink className="Link" to="/vacations" exact>Vacations</NavLink></Button>
                         <Button color="inherit"><NavLink className="Link" to="/login" exact>Login</NavLink></Button>
                         
-                        {store.getState().UserReducer.user !== null && <Button color="inherit"><NavLink className="Link" to="/logout" exact>Logout</NavLink></Button>}
+                        <Logout history={history}/>
                         
 
                         <Typography variant="h4" className={classes.title}>

@@ -60,8 +60,12 @@ function AdminVacationCard(props: AdminVacationCardProps): JSX.Element {
             if (!answer) {
                 return;
             }
-            await axios.delete<VacationModel>(Globals.vacationsUrl + vacationId);
-            // with redux:
+            await axios.delete<VacationModel>(Globals.adminUrl + vacationId,{ // get data from the server
+                headers: { //send token header
+                    'Authorization': `token ${store.getState().UserReducer.user.token}`
+                }
+            });
+             //with redux:
             const action = { type: VacationsActionType.VacationDeleted, payload: vacationId };
             store.dispatch(action);
             history.push("/admin");

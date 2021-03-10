@@ -35,6 +35,7 @@ class AdminVacationsList extends Component<AdminVacationsProps, AdminVacationsLi
         try {
             // get all vacations:
             this.unsubscribeFromStore = store.subscribe(() => {
+                console.log("subscribe triggered");
                 this.setState({ vacations: store.getState().VacationsReducer.vacations });
             });
 
@@ -42,7 +43,11 @@ class AdminVacationsList extends Component<AdminVacationsProps, AdminVacationsLi
 
 
                 if (store.getState().VacationsReducer.vacations.length === 0) {
-                    const response = await axios.get<VacationModel[]>(Globals.vacationsUrl); // get data from the server
+                    const response = await axios.get<VacationModel[]>(Globals.adminUrl,{ // get data from the server
+                        headers: { //send token header
+                            'Authorization': `token ${store.getState().UserReducer.user.token}`
+                        }
+                    }); 
                     const vacations = response.data;
                     const action = { type: VacationsActionType.VacationsDownloaded, payload: vacations };
                     store.dispatch(action);

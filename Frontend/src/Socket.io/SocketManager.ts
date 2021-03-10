@@ -1,3 +1,4 @@
+import { FollowsActionType } from './../Redux/FollowsState';
 import { VacationsActionType } from '../Redux/VacationsState';
 import { io, Socket } from "socket.io-client";
 import VacationModel from "../Components/VacationsArea/models/VacationModel";
@@ -13,24 +14,36 @@ class SocketManager {
         this.socket = io(Globals.socketIoUrl);
 
         // Listen to socket.io events:
-        this.socket.on("msg-from-server-vacations-downloaded", (vacations: VacationModel)=>{
-            store.dispatch({type: VacationsActionType.VacationsDownloaded, payload: vacations});
+        this.socket.on("test", () => {
+            console.log("received test event");
+        });
+        this.socket.on("vacations-changed", (vacations: VacationModel[]) => {
+            console.log("received event");
+            store.dispatch({ type: VacationsActionType.VacationsDownloaded, payload: vacations });
         });
 
-        this.socket.on("msg-from-server-vacation-added", (addedVacation: VacationModel) => { 
-            store.dispatch({type: VacationsActionType.VacationAdded, payload: addedVacation});
-        });
+        // this.socket.on("follows-changed", (followsCounts: FollowsCountModel[]) => {
+        //     store.dispatch({type: FollowsActionType.FollowsTotalCount, payload: followsCounts});
+        // });
 
-        this.socket.on("msg-from-server-vacation-updated", (updatedVacation: VacationModel) => { 
-            store.dispatch({type: VacationsActionType.VacationUpdated, payload: updatedVacation});
-        });
+        // this.socket.on("msg-from-server-vacations-downloaded", (vacations: VacationModel[])=>{
+        //     store.dispatch({type: VacationsActionType.VacationsDownloaded, payload: vacations});
+        // });
 
-        this.socket.on("msg-from-server-vacation-deleted", (id: number) => { 
-            store.dispatch({type: VacationsActionType.VacationDeleted, payload: id});
-        });
+        // this.socket.on("msg-from-server-vacation-added", (addedVacation: VacationModel) => { 
+        //     store.dispatch({type: VacationsActionType.VacationAdded, payload: addedVacation});
+        // });
+
+        // this.socket.on("msg-from-server-vacation-updated", (updatedVacation: VacationModel) => { 
+        //     store.dispatch({type: VacationsActionType.VacationUpdated, payload: updatedVacation});
+        // });
+
+        // this.socket.on("msg-from-server-vacation-deleted", (id: number) => { 
+        //     store.dispatch({type: VacationsActionType.VacationDeleted, payload: id});
+        // });
     }
 
-    public disconnect() : void {
+    public disconnect(): void {
         this.socket.disconnect();
     }
 

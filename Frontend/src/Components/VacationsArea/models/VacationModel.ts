@@ -7,6 +7,8 @@ class VacationModel {
     public price: number;
     public imageFileName: string;
     public image: FileList;
+    public isFollowed: boolean;
+    public followersCount: number;
 }
 
 export default VacationModel;

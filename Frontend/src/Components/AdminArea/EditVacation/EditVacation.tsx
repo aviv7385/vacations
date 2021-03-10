@@ -29,22 +29,26 @@ function EditVacation(props: EditVacationProps): JSX.Element {
     // Get the initial values of the vacation to edit:
     useEffect(() => {
         const vacationId = +props.match.params.vacationId;
-        axios.get<VacationModel>(Globals.vacationsUrl + vacationId)
+        axios.get<VacationModel>(Globals.adminUrl + vacationId, { // get data from the server
+            headers: { //send token header
+                'Authorization': `token ${store.getState().UserReducer.user.token}`
+            }
+        })
             .then(response => {
-                const vacation = response.data;
-                // set the dates in the correct format for the date picker
-                fromDate = new Date(vacation.fromDate);
-                fromDate.setDate(fromDate.getDate() + 1);
-                fromDate = fromDate.toISOString().split('T')[0];
-                toDate = new Date(vacation.toDate);
-                toDate.setDate(toDate.getDate() + 1);
-                toDate = toDate.toISOString().split('T')[0];
-                setValue("destination", vacation.destination);
-                setValue("description", vacation.description);
-                setValue("fromDate", fromDate);
-                setValue("toDate", toDate);
-                setValue("price", vacation.price.toString());
-            });
+            const vacation = response.data;
+            // set the dates in the correct format for the date picker
+            fromDate = new Date(vacation.fromDate);
+            fromDate.setDate(fromDate.getDate() + 1);
+            fromDate = fromDate.toISOString().split('T')[0];
+            toDate = new Date(vacation.toDate);
+            toDate.setDate(toDate.getDate() + 1);
+            toDate = toDate.toISOString().split('T')[0];
+            setValue("destination", vacation.destination);
+            setValue("description", vacation.description);
+            setValue("fromDate", fromDate);
+            setValue("toDate", toDate);
+            setValue("price", vacation.price.toString());
+        });
     }, []);
 
     async function sendData(vacation: VacationModel) {
@@ -56,7 +60,11 @@ function EditVacation(props: EditVacationProps): JSX.Element {
             myFormData.append("toDate", vacation.toDate);
             myFormData.append("price", vacation.price.toString());
             myFormData.append("image", vacation.image.item(0));
-            const response = await axios.patch<VacationModel>(Globals.vacationsUrl + props.match.params.vacationId, myFormData);
+            const response = await axios.patch<VacationModel>(Globals.adminUrl + props.match.params.vacationId, myFormData,{ // get data from the server
+                headers: { //send token header
+                    'Authorization': `token ${store.getState().UserReducer.user.token}`
+                }
+            });
 
             // with redux:
             const action = { type: VacationsActionType.VacationUpdated, payload: response.data };

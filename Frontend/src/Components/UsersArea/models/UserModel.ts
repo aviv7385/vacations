@@ -6,6 +6,7 @@ class UserModel {
     username: string;
     password: string;
     isAdmin: boolean;
+    token: string;
 }
 
 export default UserModel;

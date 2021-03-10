@@ -3,7 +3,7 @@ const errorsHelper = require("../helpers/errors-helper");
 const express = require("express");
 const router = express.Router();
 
-// GET all users - /api/users
+// GET all users - /api/vacations/users
 router.get("/", async (request, response) => {
     try {
         const users = await usersLogic.getAllUsersAsync();
@@ -14,7 +14,7 @@ router.get("/", async (request, response) => {
     }
 });
 
-// GET one users - /api/users/uuid
+// GET one users - /api/vacations/users/uuid
 router.get("/:uuid", async (request, response) => {
     try {
         const uuid = +request.params.uuid

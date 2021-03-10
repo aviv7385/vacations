@@ -1,6 +1,6 @@
 const uuid = require("uuid");
 const dal = require("../data-access-layer/dal");
-
+const followsLogic = require("./follows-logic");
 
 // get all vacations (ALL USERS)
 async function getAllVacationsAsync() {
@@ -9,6 +9,11 @@ async function getAllVacationsAsync() {
                 DATE_FORMAT(toDate, "%M %d %Y") AS toDate, 
                 price, imageFileName FROM vacations`;
     const vacations = await dal.executeAsync(sql);
+    for(const vacation of vacations) {
+        vacation.followersCount = (await followsLogic.getNumberOfFollowsAsync(vacation.vacationId)).followersCount;
+        console.log(vacation.followersCount);
+    }
+    
     return vacations;
 }
 
@@ -21,6 +26,7 @@ async function getOneVacationAsync(vacationId) {
                 price, imageFileName FROM vacations 
                 WHERE vacationId = ${vacationId}`;
     const vacations = await dal.executeAsync(sql);
+    vacations[0].followersCount = (await followsLogic.getNumberOfFollowsAsync(vacations[0].vacationId)).followersCount;
     return vacations[0];
 }
 

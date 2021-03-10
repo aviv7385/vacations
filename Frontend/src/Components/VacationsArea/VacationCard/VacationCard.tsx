@@ -11,6 +11,7 @@ import store from "../../../Redux/Store";
 import axios from "axios";
 import FollowedVacations from "../FollowedVacations/FollowedVacations";
 import FollowsModel from "../models/FollowsModel";
+import { SettingsInputAntennaTwoTone } from "@material-ui/icons";
 
 
 
@@ -31,53 +32,30 @@ function VacationCard(props: VacationCardProps): JSX.Element {
     });
     const classes = useStyles();
 
-
-    const [iconColor,setIconColor] = useState("");
+    const [isFollowed, setIsFollowed] = useState(props.singleVacation.isFollowed);
+    const [iconColor, setIconColor] = useState(props.singleVacation.isFollowed ? "red": "");
     // ================================================================
-
-    
-    let followsArray = [{ userId: 1, vacationId: 1 }];
-    // useEffect(() => {
-    //     // get all followed vacations (by user's id)
-    //     (async function getFollowedVacation() {
-    //         try {
-    //             const response = await axios.get<FollowsModel[]>(Globals.vacationsUrl + `follows/${store.getState().UserReducer.user.userId}`);
-    //             followsArray = response.data;
-    //             console.log(followsArray);
-    //         }
-    //         catch (err) {
-    //             console.log(err)
-    //             console.log(err.message);
-    //             alert("Error!");
-    //         }
-    //     })();
-    // });
-
-
 
     // follow a vacation (add new follow) or unfollow it
     async function followVacation() {
         try {
-            
             const follow = new FollowsModel();
             follow.vacationId = props.singleVacation.vacationId;
             follow.userId = store.getState().UserReducer.user.userId;
             console.log(follow);
-            console.log(followsArray);
-            for (const obj of followsArray) {
-                if (follow.vacationId === obj.vacationId) {
-                    console.log(follow.vacationId)
-                    await axios.delete<FollowsModel>(Globals.vacationsUrl + `follows/${store.getState().UserReducer.user.uuid}/${props.singleVacation.vacationId}/`);
-                    alert(`vacation ${follow.vacationId} was unfollowed`);
-                    setIconColor("");
-                    return;
-                }
-                break;
+            //console.log(followsArray);
+            if (isFollowed) {
+                console.log(follow.vacationId)
+                await axios.delete<FollowsModel>(Globals.vacationsUrl + `follows/${store.getState().UserReducer.user.userId}/${props.singleVacation.vacationId}/`);
+                alert(`vacation ${follow.vacationId} was unfollowed`);
+                setIconColor("");
+                setIsFollowed(false);
+                return;
             }
+            setIsFollowed(true);
             await axios.post<FollowsModel>(Globals.vacationsUrl + "follows/", follow);
             alert(`vacation ${follow.vacationId} is now followed`);
-            console.log("updated: " + followsArray);
-            setIconColor("secondary");
+            setIconColor("red");
         }
         catch (err) {
             console.log(err)
@@ -92,39 +70,39 @@ function VacationCard(props: VacationCardProps): JSX.Element {
             <Box m={5} component="div" display="inline-block">
                 <Card className={classes.root}>
                     {/* <CardActionArea> */}
-                        <CardMedia
-                            component="img"
-                            alt={props.singleVacation.destination}
-                            className={classes.media}
-                            image={Globals.vacationsUrl + "images/" + props.singleVacation.imageFileName}
-                            title={props.singleVacation.destination}
-                        />
-                        <CardHeader
-                            action={
-                                <Tooltip title="Follow">
-                                    <IconButton aria-label="settings" onClick={followVacation} style={{color:iconColor}} >
-                                        <FavoriteIcon  />
-                                    </IconButton>
-                                </Tooltip>
-                            }
-                            title={props.singleVacation.destination}
-                        />
+                    <CardMedia
+                        component="img"
+                        alt={props.singleVacation.destination}
+                        className={classes.media}
+                        image={Globals.vacationsUrl + "images/" + props.singleVacation.imageFileName}
+                        title={props.singleVacation.destination}
+                    />
+                    <CardHeader
+                        action={
+                            <Tooltip title="Follow">
+                                <IconButton aria-label="settings" onClick={followVacation} style={{color:iconColor}} >
+                                    <FavoriteIcon />
+                                </IconButton>
+                            </Tooltip>
+                        }
+                        title={props.singleVacation.destination}
+                    />
 
-                        <CardContent>
-                            <Typography variant="body1" color="textSecondary" component="p" align="left">
-                                {props.singleVacation.description} <br />
+                    <CardContent>
+                        <Typography variant="body1" color="textSecondary" component="p" align="left">
+                            {props.singleVacation.description} <br />
                                 From: {props.singleVacation.fromDate} <br />
                                 To: {props.singleVacation.toDate} <br />
                                 Price: ${props.singleVacation.price} <br />
-                            </Typography>
-                            <Typography variant="body1" color="textSecondary" component="p" align="right">
-                                <Tooltip title="Followers">
-                                    <Badge badgeContent={4} color="secondary">
-                                        <FavoriteIcon />
-                                    </Badge>
-                                </Tooltip>
-                            </Typography>
-                        </CardContent>
+                        </Typography>
+                        <Typography variant="body1" color="textSecondary" component="p" align="right">
+                            <Tooltip title="Followers">
+                                <Badge badgeContent={props.singleVacation.followersCount} color="secondary">
+                                    <FavoriteIcon />
+                                </Badge>
+                            </Tooltip>
+                        </Typography>
+                    </CardContent>
 
                     {/* </CardActionArea> */}
                 </Card>
