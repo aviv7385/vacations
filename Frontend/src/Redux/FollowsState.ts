@@ -30,12 +30,9 @@ export function FollowsReducer(currentState: FollowsState = new FollowsState(), 
             newState.followedVacations.push(action.payload); // payload - the added follow
             break;
         case FollowsActionType.FollowDeleted:
-            const indexToDelete = newState.followedVacations.findIndex(f => f.vacationId === action.payload);
-            newState.followedVacations.splice(indexToDelete, 1); // payload = the removed follow
+            const indexToDelete = newState.followedVacations.findIndex(f => f.vacationId === action.payload); // payload = the removed follow
+            newState.followedVacations.splice(indexToDelete, 1);
             break;
-        // case FollowsActionType.FollowsTotalCount:
-        //     newState.followsCounts = action.payload;
-        //     break;
     }
     return newState;
 }

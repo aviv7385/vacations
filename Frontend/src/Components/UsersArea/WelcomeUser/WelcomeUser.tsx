@@ -4,6 +4,10 @@ import store from "../../../Redux/Store";
 import Typography from '@material-ui/core/Typography';
 import "./WelcomeUser.css";
 
+// this component will be displayed to any user (registered or anonymous)
+// if it's an anonymous user - will be displayed "hello guest"
+// if it's a registered user (regular/admin) - will be displayed "hello (user.firstName + user.lastName)"
+
 
 interface WelcomeUserState {
     userFirstName: string;
@@ -15,11 +19,13 @@ class WelcomeUser extends Component<{}, WelcomeUserState> {
 
     public constructor(props: {}) {
         super(props);
+        // if user is logged in, get their first & last names from the user state
         if(store.getState().UserReducer.user) {
             this.state = { userFirstName: store.getState().UserReducer.user.firstName.toLocaleUpperCase() + " " + store.getState().UserReducer.user.lastName.toLocaleUpperCase() } // with redux
         }
+        // if user is not logged in - change the displayed name to "guest"
         else {
-            this.state = { userFirstName: "GUEST" }; // without redux
+            this.state = { userFirstName: "GUEST" }; 
         }
     }
 
@@ -27,8 +33,7 @@ class WelcomeUser extends Component<{}, WelcomeUserState> {
         // start listening for changes
         this.unsubscribeStore = store.subscribe(() => {
             this.setState({ userFirstName: store.getState().UserReducer.user.firstName.toLocaleUpperCase() + " " + store.getState().UserReducer.user.lastName.toLocaleUpperCase() })
-        });
-        
+        });  
     }
 
     public render(): JSX.Element {

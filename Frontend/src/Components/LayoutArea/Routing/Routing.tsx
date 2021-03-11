@@ -1,4 +1,3 @@
-import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import AdminAddVacation from "../../AdminArea/AdminAddVacation/AdminAddVacation";
 import AdminVacationsList from "../../AdminArea/AdminVacationsList/AdminVacationsList";

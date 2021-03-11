@@ -9,8 +9,8 @@ const connection = mysql.createPool({
 
 function executeAsync(sql) {
     return new Promise((resolve, reject) => {
-        connection.query(sql, (err, result)=>{
-            if(err) {
+        connection.query(sql, (err, result) => {
+            if (err) {
                 reject(err);
                 return;
             }

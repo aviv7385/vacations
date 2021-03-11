@@ -12,9 +12,9 @@ export class Globals {
             Globals.adminUrl = "";
         }
         else {
-            Globals.vacationsUrl = "http://localhost:3001/api/vacations/";
-            Globals.adminUrl = "http://localhost:3001/api/admin/vacations/";
-            Globals.socketIoUrl = "http://localhost:3001";
+            Globals.vacationsUrl = "http://localhost:3001/api/vacations/"; // the url for any user
+            Globals.adminUrl = "http://localhost:3001/api/admin/vacations/"; // the url for admin only
+            Globals.socketIoUrl = "http://localhost:3001"; // url for socket.io
         }
     }
 }

@@ -9,17 +9,17 @@ async function getAllVacationsAsync() {
                 DATE_FORMAT(toDate, "%M %d %Y") AS toDate, 
                 price, imageFileName FROM vacations`;
     const vacations = await dal.executeAsync(sql);
-    for(const vacation of vacations) {
+    // get the number of followers for each vacation
+    for (const vacation of vacations) {
         vacation.followersCount = (await followsLogic.getNumberOfFollowsAsync(vacation.vacationId)).followersCount;
-        console.log(vacation.followersCount);
     }
-    
+
     return vacations;
 }
 
 // get one vacation
 async function getOneVacationAsync(vacationId) {
-    
+
     const sql = `SELECT vacationId, destination, description, 
                 DATE_FORMAT(fromDate, "%M %d %Y") AS fromDate, 
                 DATE_FORMAT(toDate, "%M %d %Y") AS toDate, 
@@ -66,7 +66,7 @@ async function updateFullVacationAsync(vacation, image) {
                 imageFileName = '${vacation.imageFileName}'
                 WHERE vacationId = ${vacation.vacationId}`;
     const info = await dal.executeAsync(sql);
-    if (image){
+    if (image) {
         vacation.imageFileName = newFileName;
     }
     return info.affectedRows === 0 ? null : vacation;
@@ -74,16 +74,16 @@ async function updateFullVacationAsync(vacation, image) {
 
 // Update partial vacation (ONLY ADMIN)
 async function updatePartialVacationAsync(vacation, image) {
-    
-     // save image to server
-     let newFileName = null;
-     if (image) {
-         const extension = image.name.substr(image.name.lastIndexOf("."));
-         newFileName = uuid.v4() + extension;
-         await image.mv("./images/" + newFileName);
-     }
+
+    // save image to server
+    let newFileName = null;
+    if (image) {
+        const extension = image.name.substr(image.name.lastIndexOf("."));
+        newFileName = uuid.v4() + extension;
+        await image.mv("./images/" + newFileName);
+    }
     const vacationToUpdate = await getOneVacationAsync(vacation.vacationId);
-   
+
     if (!vacationToUpdate) {
         return null;
     }
@@ -92,7 +92,7 @@ async function updatePartialVacationAsync(vacation, image) {
             vacationToUpdate[prop] = vacation[prop];
         }
     }
-    if (image){
+    if (image) {
         vacationToUpdate.imageFileName = newFileName;
     }
     return await updateFullVacationAsync(vacationToUpdate);

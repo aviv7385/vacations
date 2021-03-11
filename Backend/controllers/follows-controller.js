@@ -15,6 +15,7 @@ router.get("/:uuid", async (request, response) => {
             response.status(404).send(`No follows were found`);
         }
         response.json(follows);
+   
     }
     catch (err) {
         response.status(500).send(errorsHelper.getError(err));

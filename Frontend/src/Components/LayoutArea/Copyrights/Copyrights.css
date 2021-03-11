@@ -5,3 +5,11 @@
     justify-content: center;
     font-size: smaller;
 }
+
+.Copyrights a {
+    text-decoration: none;
+}
+
+.Copyrights a:hover {
+    color: red;
+}

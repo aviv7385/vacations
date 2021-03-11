@@ -1,8 +1,6 @@
 global.config = require(process.env.NODE_ENV === "production" ? "./config-prod.json" : "./config-dev.json");
 const express = require("express");
 const fileUpload = require("express-fileupload");
-const verifyAdmin = require("./middleware/verify-admin");
-const verifyLoggedIn = require("./middleware/verify-logged-in");
 const vacationsController = require("./controllers/vacations-controller");
 const authController = require("./controllers/auth-controller");
 const followsController = require("./controllers/follows-controller");

@@ -1,15 +1,13 @@
 const express = require("express");
 const path = require("path");
-const Vacation = require("../models/vacation");
 const vacationsLogic = require("../business-logic-layer/vacations-logic");
 const verifyLoggedIn = require("../middleware/verify-logged-in");
-const socketHelper = require("../helpers/socket-io-helper");
 
 const router = express.Router(); // Only the routing mechanism for our controller.
 
 
 // GET all vacations - /api/vacations (access allowed to logged in users only)
-router.get("/",verifyLoggedIn, async (request, response) => {
+router.get("/", verifyLoggedIn, async (request, response) => {
     try {
         const vacations = await vacationsLogic.getAllVacationsAsync();
         response.json(vacations);
@@ -21,7 +19,7 @@ router.get("/",verifyLoggedIn, async (request, response) => {
 
 
 // GET one vacation - /api/vacations/7  (access allowed to logged in users only)
-router.get("/:vacationId",async (request, response) => {
+router.get("/:vacationId", async (request, response) => {
     try {
         const vacationId = +request.params.vacationId;
         const vacation = await vacationsLogic.getOneVacationAsync(vacationId);

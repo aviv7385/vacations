@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { Component, SyntheticEvent } from "react";
+import { Component } from "react";
 import store from "../../../Redux/Store";
 import { History } from "history";
 import { VacationsActionType } from "../../../Redux/VacationsState";
@@ -8,9 +8,11 @@ import "./AdminVacationsList.css";
 import VacationModel from "../../VacationsArea/models/VacationModel";
 import AdminVacationCard from "../AdminVacationCard/AdminVacationCard";
 import { Button, Typography } from "@material-ui/core";
-import { NavLink, RouteComponentProps } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { Unsubscribe } from "redux";
 
+
+// this component will display all vacations available - to admin only (will have the "add vacation" link)
 
 interface AdminVacationsListState {
     vacations: VacationModel[];
@@ -35,27 +37,26 @@ class AdminVacationsList extends Component<AdminVacationsProps, AdminVacationsLi
         try {
             // get all vacations:
             this.unsubscribeFromStore = store.subscribe(() => {
-                console.log("subscribe triggered");
                 this.setState({ vacations: store.getState().VacationsReducer.vacations });
             });
 
+            // check if user is logged-in
             if (store.getState().UserReducer.user !== null) {
-
-
+                // check if there are vacations in the vacations state - if not - get the data from the server and send it to the vacations state
                 if (store.getState().VacationsReducer.vacations.length === 0) {
-                    const response = await axios.get<VacationModel[]>(Globals.adminUrl,{ // get data from the server
+                    // get data from the server
+                    const response = await axios.get<VacationModel[]>(Globals.adminUrl, {
                         headers: { //send token header
                             'Authorization': `token ${store.getState().UserReducer.user.token}`
                         }
-                    }); 
+                    });
                     const vacations = response.data;
                     const action = { type: VacationsActionType.VacationsDownloaded, payload: vacations };
                     store.dispatch(action);
-                    //this.setState({ vacations: store.getState().VacationsReducer.vacations }); // update the local state with data from the store 
-                    console.log(vacations);
                 }
 
             }
+            // if user is not logged-in - show an alert and redirect to login page
             else {
                 alert("You need to log in first");
                 this.props.history.push("/login");
@@ -64,7 +65,7 @@ class AdminVacationsList extends Component<AdminVacationsProps, AdminVacationsLi
         catch (err) {
             console.log(err);
             console.log(err.message);
-            alert("Error");
+            alert("You are not supposed to be here!");
         }
     }
 

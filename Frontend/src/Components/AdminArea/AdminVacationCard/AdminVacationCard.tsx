@@ -1,5 +1,4 @@
-import { Box, Card, CardActionArea, CardContent, CardHeader, CardMedia, IconButton, makeStyles, Tooltip, Typography } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import { Box, Card, CardContent, CardHeader, CardMedia, IconButton, makeStyles, Tooltip, Typography } from "@material-ui/core";
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
 import { Globals } from "../../../Services/Globals";
@@ -11,7 +10,7 @@ import { VacationsActionType } from "../../../Redux/VacationsState";
 import store from "../../../Redux/Store";
 
 
-
+// this component will create a vacation card for admin only (it will have the "edit vacation" and "delete vacation" features)
 
 interface AdminVacationCardProps {
     singleVacation: VacationModel;
@@ -19,7 +18,7 @@ interface AdminVacationCardProps {
 
 function AdminVacationCard(props: AdminVacationCardProps): JSX.Element {
 
-    // create history object by using the useHistory() hook  (to redirect to another page)
+    // create history object to redirect to another page
     const history = useHistory();
 
     // using material UI  for the card
@@ -35,23 +34,7 @@ function AdminVacationCard(props: AdminVacationCardProps): JSX.Element {
 
     // =========================================================================================
 
-    // // update the vacations data in the state
-    // const vacationsArray = useState<VacationModel[]>([]);
-    // const vacationsList = vacationsArray[0]; // the data
-    // const setVacations = vacationsArray[1]; // the function that updates the data in the state
-
-    // // with any change to state - update it 
-    // useEffect(() => {
-    //     (async function () {
-    //         const response = await axios.get<VacationModel[]>(Globals.vacationsUrl);
-    //         const vacations = response.data;
-    //         setVacations(vacations);
-
-    //     })();
-    // });
-
-    //=============================================================================================
-
+    // a function to delete a vacation from the server (by clicking the "remove" icon)
     async function removeVacation() {
         try {
             const vacationId = props.singleVacation.vacationId;
@@ -60,20 +43,21 @@ function AdminVacationCard(props: AdminVacationCardProps): JSX.Element {
             if (!answer) {
                 return;
             }
-            await axios.delete<VacationModel>(Globals.adminUrl + vacationId,{ // get data from the server
+            // send data to the server
+            await axios.delete<VacationModel>(Globals.adminUrl + vacationId, {
                 headers: { //send token header
                     'Authorization': `token ${store.getState().UserReducer.user.token}`
                 }
             });
-             //with redux:
+            // with redux:
             const action = { type: VacationsActionType.VacationDeleted, payload: vacationId };
-            store.dispatch(action);
+            store.dispatch(action); // update the vacations state
             history.push("/admin");
         }
         catch (err) {
             console.log(err)
             console.log(err.message);
-            alert("Error!");
+            alert("Something went wrong.");
         }
     }
 

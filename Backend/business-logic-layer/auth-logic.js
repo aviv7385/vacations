@@ -41,7 +41,7 @@ async function loginAsync(credentials) {
         return null;
     }
     const user = users[0];
-    
+
     // Generate JWT token to return to frontend:
     user.token = jwtHelper.getNewToken({ user });
     return user;

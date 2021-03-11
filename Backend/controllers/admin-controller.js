@@ -4,7 +4,8 @@ const Vacation = require("../models/vacation");
 const socketHelper = require("../helpers/socket-io-helper");
 const vacationsLogic = require("../business-logic-layer/vacations-logic");
 const verifyAdmin = require("../middleware/verify-admin");
-const router = express.Router(); // Only the routing mechanism for our controller.
+
+const router = express.Router(); // Only the routing mechanism for this controller.
 
 
 // GET all vacations - /api/admin/vacations (access allowed to ADMIN only)
@@ -17,7 +18,6 @@ router.get("/", verifyAdmin, async (request, response) => {
         response.status(500).send(err.message);
     }
 });
-
 
 // GET one vacation - /api/admin/vacations/7  (access allowed to ADMIN only)
 router.get("/:vacationId", verifyAdmin, async (request, response) => {
@@ -50,11 +50,6 @@ router.get("/images/:imageFileName", async (request, response) => {
 router.post("/", verifyAdmin, async (request, response) => {
     try {
         const vacation = new Vacation(request.body);
-        // const error = vacation.validatePost();
-        // if (error) {
-        //     response.status(400).send(error);
-        //     return;
-        // }
         const addedVacation = await vacationsLogic.addOneVacationAsync(vacation, request.files ? request.files.image : null);
         response.status(201).json(addedVacation);
         // send socket.io added message to front
@@ -91,7 +86,7 @@ router.put("/:vacationId", verifyAdmin, async (request, response) => {
 });
 
 // PATCH - update partial vacation info - /api/admin/vacations/7 (access allowed to ADMIN only)
-router.patch("/:vacationId", async (request, response) => {
+router.patch("/:vacationId", verifyAdmin, async (request, response) => {
     try {
         const vacation = new Vacation(request.body);
         vacation.vacationId = +request.params.vacationId;

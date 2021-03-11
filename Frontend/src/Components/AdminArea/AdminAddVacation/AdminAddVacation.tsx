@@ -1,22 +1,20 @@
-import { Box, Button, ButtonGroup, createMuiTheme, FormControlLabel, makeStyles, TextField, ThemeProvider, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { History } from "history";
 import store from "../../../Redux/Store";
-import { VacationsActionType } from "../../../Redux/VacationsState";
 import { Globals } from "../../../Services/Globals";
 import VacationModel from "../../VacationsArea/models/VacationModel";
-import React from 'react';
 import "./AdminAddVacation.css";
-import { DatePicker } from "@material-ui/pickers";
 
-
+// this component will allow the Admin to add a new vacation
 
 interface AdminAddVacationProps {
     history: History;
 }
 
 function AdminAddVacation(props: AdminAddVacationProps): JSX.Element {
+
     // get today's date (for the default value of date-picker)
     const curr = new Date();
     curr.setDate(curr.getDate());
@@ -34,23 +32,21 @@ function AdminAddVacation(props: AdminAddVacationProps): JSX.Element {
             myFormData.append("toDate", vacation.toDate);
             myFormData.append("price", vacation.price.toString());
             myFormData.append("image", vacation.image.item(0));
-            const response = await axios.post<VacationModel>(Globals.adminUrl, myFormData, { // get data from the server
+            // send data to the server
+            const response = await axios.post<VacationModel>(Globals.adminUrl, myFormData, {
                 headers: { //send token header
                     'Authorization': `token ${store.getState().UserReducer.user.token}`
                 }
             });
             const addedVacation = response.data;
 
-            // with redux:
-            // const action = { type: VacationsActionType.VacationAdded, payload: addedVacation };
-            // store.dispatch(action);
             alert(`Vacation to ${addedVacation.destination} has been successfully added.`);
             props.history.push("/admin");
         }
         catch (err) {
             console.log(err);
             console.log(err.message);
-            alert("Error");
+            alert("Something went wrong.");
         }
     }
 

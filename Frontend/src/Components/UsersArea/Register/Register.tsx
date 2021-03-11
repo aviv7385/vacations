@@ -1,6 +1,5 @@
 import { Typography } from "@material-ui/core";
 import axios from "axios";
-import React from "react";
 import { History } from "history";
 import { useForm } from "react-hook-form";
 import { Globals } from "../../../Services/Globals";
@@ -8,6 +7,10 @@ import UserModel from "../models/UserModel";
 import "./Register.css";
 import { UserActionType } from "../../../Redux/UserState";
 import store from "../../../Redux/Store";
+import { socketManagerInstance } from "../../../Socket.io/SocketManager";
+
+
+// this component will be displayed to any anonymous user and will allow them to register to the system
 
 interface RegisterProps {
     history: History;
@@ -20,14 +23,17 @@ function Register(props: RegisterProps): JSX.Element {
 
     async function sendData(user: UserModel) {
         try {
+            // send data to the server:
             const response = await axios.post(Globals.vacationsUrl + "auth/register", user);
             const addedUser = response.data;
-
+            // update the user state:
             const action = { type: UserActionType.UserRegistered, payload: addedUser };
             store.dispatch(action);
-
             alert("You have successfully registered!");
+            // redirect to login page:
             props.history.push("/login");
+            // connect to socket.io:
+            socketManagerInstance.connect();
         }
         catch (err) {
             console.log(err);

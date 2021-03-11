@@ -1,19 +1,16 @@
-import { Badge, Box, Card, CardActionArea, CardContent, CardHeader, CardMedia, IconButton, makeStyles, Tooltip, Typography } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import { Badge, Box, Card, CardContent, CardHeader, CardMedia, IconButton, makeStyles, Tooltip, Typography } from "@material-ui/core";
+import { useState } from "react";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Globals } from "../../../Services/Globals";
 import VacationModel from "../models/VacationModel";
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import "./VacationCard.css";
-import { RouteComponentProps } from "react-router-dom";
-import UserModel from "../../UsersArea/models/UserModel";
 import store from "../../../Redux/Store";
 import axios from "axios";
-import FollowedVacations from "../FollowedVacations/FollowedVacations";
 import FollowsModel from "../models/FollowsModel";
-import { SettingsInputAntennaTwoTone } from "@material-ui/icons";
 
 
+// this component will create a vacation card for any user that is not admin 
+// it will have the follow/unfollow feature + will display total number of followers for the specific vacation
 
 interface VacationCardProps {
     singleVacation: VacationModel;
@@ -32,35 +29,43 @@ function VacationCard(props: VacationCardProps): JSX.Element {
     });
     const classes = useStyles();
 
+    // create a flag to check if a specific vacation is followed by the user
     const [isFollowed, setIsFollowed] = useState(props.singleVacation.isFollowed);
-    const [iconColor, setIconColor] = useState(props.singleVacation.isFollowed ? "red": "");
+
+    // if a specific vacation is followed by the user - change the "follow" icon's color to red.
+    // if it is not followed by the user - change it to the default color (in this case - grey)
+    const [iconColor, setIconColor] = useState(props.singleVacation.isFollowed ? "red" : "");
     // ================================================================
 
     // follow a vacation (add new follow) or unfollow it
     async function followVacation() {
         try {
+            // create a follow obj, using the follow model
             const follow = new FollowsModel();
-            follow.vacationId = props.singleVacation.vacationId;
-            follow.userId = store.getState().UserReducer.user.userId;
-            console.log(follow);
-            //console.log(followsArray);
+            follow.vacationId = props.singleVacation.vacationId; // get the vacationId from the props
+            follow.userId = store.getState().UserReducer.user.userId; // get the userId from the user state
+
+            // if the vacation is already followed by the user - unfollow it 
             if (isFollowed) {
-                console.log(follow.vacationId)
+                // send data to server 
                 await axios.delete<FollowsModel>(Globals.vacationsUrl + `follows/${store.getState().UserReducer.user.userId}/${props.singleVacation.vacationId}/`);
-                alert(`vacation ${follow.vacationId} was unfollowed`);
+                // change the follow icon's color to the default color
                 setIconColor("");
+                // change the "isFollowed" flag to false
                 setIsFollowed(false);
                 return;
             }
+            // if the vacation is not followed by the user - follow it
             setIsFollowed(true);
+            // send data to the server
             await axios.post<FollowsModel>(Globals.vacationsUrl + "follows/", follow);
-            alert(`vacation ${follow.vacationId} is now followed`);
+            // change the follow icon's color to red
             setIconColor("red");
         }
         catch (err) {
             console.log(err)
             console.log(err.message);
-            alert("Error!");
+            alert("Something went wrong.");
         }
     }
 
@@ -69,7 +74,6 @@ function VacationCard(props: VacationCardProps): JSX.Element {
         <div className="VacationCard">
             <Box m={5} component="div" display="inline-block">
                 <Card className={classes.root}>
-                    {/* <CardActionArea> */}
                     <CardMedia
                         component="img"
                         alt={props.singleVacation.destination}
@@ -80,7 +84,7 @@ function VacationCard(props: VacationCardProps): JSX.Element {
                     <CardHeader
                         action={
                             <Tooltip title="Follow">
-                                <IconButton aria-label="settings" onClick={followVacation} style={{color:iconColor}} >
+                                <IconButton aria-label="settings" onClick={followVacation} style={{ color: iconColor }} >
                                     <FavoriteIcon />
                                 </IconButton>
                             </Tooltip>
@@ -96,15 +100,13 @@ function VacationCard(props: VacationCardProps): JSX.Element {
                                 Price: ${props.singleVacation.price} <br />
                         </Typography>
                         <Typography variant="body1" color="textSecondary" component="p" align="right">
-                            <Tooltip title="Followers">
+                            <Tooltip title="Total Followers">
                                 <Badge badgeContent={props.singleVacation.followersCount} color="secondary">
                                     <FavoriteIcon />
                                 </Badge>
                             </Tooltip>
                         </Typography>
                     </CardContent>
-
-                    {/* </CardActionArea> */}
                 </Card>
             </Box>
 

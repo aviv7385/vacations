@@ -1,5 +1,5 @@
 import { RouteComponentProps } from "react-router-dom";
-import { Box, Button, ButtonGroup, createMuiTheme, FormControlLabel, makeStyles, TextField, ThemeProvider, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import { History } from "history";
 import "./EditVacation.css";
 import VacationModel from "../../VacationsArea/models/VacationModel";
@@ -9,6 +9,10 @@ import axios from "axios";
 import { Globals } from "../../../Services/Globals";
 import { VacationsActionType } from "../../../Redux/VacationsState";
 import store from "../../../Redux/Store";
+
+
+// this component will allow the Admin to edit an existing vacation (full update or partial update)
+
 
 interface MatchParams {
     vacationId: string;
@@ -29,27 +33,30 @@ function EditVacation(props: EditVacationProps): JSX.Element {
     // Get the initial values of the vacation to edit:
     useEffect(() => {
         const vacationId = +props.match.params.vacationId;
-        axios.get<VacationModel>(Globals.adminUrl + vacationId, { // get data from the server
+        // get data from the server
+        axios.get<VacationModel>(Globals.adminUrl + vacationId, {
             headers: { //send token header
                 'Authorization': `token ${store.getState().UserReducer.user.token}`
             }
         })
             .then(response => {
-            const vacation = response.data;
-            // set the dates in the correct format for the date picker
-            fromDate = new Date(vacation.fromDate);
-            fromDate.setDate(fromDate.getDate() + 1);
-            fromDate = fromDate.toISOString().split('T')[0];
-            toDate = new Date(vacation.toDate);
-            toDate.setDate(toDate.getDate() + 1);
-            toDate = toDate.toISOString().split('T')[0];
-            setValue("destination", vacation.destination);
-            setValue("description", vacation.description);
-            setValue("fromDate", fromDate);
-            setValue("toDate", toDate);
-            setValue("price", vacation.price.toString());
-        });
+                const vacation = response.data;
+                // set the dates in the correct format to display on the date picker
+                fromDate = new Date(vacation.fromDate);
+                fromDate.setDate(fromDate.getDate() + 1);
+                fromDate = fromDate.toISOString().split('T')[0];
+                toDate = new Date(vacation.toDate);
+                toDate.setDate(toDate.getDate() + 1);
+                toDate = toDate.toISOString().split('T')[0];
+
+                setValue("destination", vacation.destination);
+                setValue("description", vacation.description);
+                setValue("fromDate", fromDate);
+                setValue("toDate", toDate);
+                setValue("price", vacation.price.toString());
+            });
     }, []);
+
 
     async function sendData(vacation: VacationModel) {
         try {
@@ -60,7 +67,8 @@ function EditVacation(props: EditVacationProps): JSX.Element {
             myFormData.append("toDate", vacation.toDate);
             myFormData.append("price", vacation.price.toString());
             myFormData.append("image", vacation.image.item(0));
-            const response = await axios.patch<VacationModel>(Globals.adminUrl + props.match.params.vacationId, myFormData,{ // get data from the server
+            // send the updated data to the server
+            const response = await axios.patch<VacationModel>(Globals.adminUrl + props.match.params.vacationId, myFormData, {
                 headers: { //send token header
                     'Authorization': `token ${store.getState().UserReducer.user.token}`
                 }
@@ -68,14 +76,14 @@ function EditVacation(props: EditVacationProps): JSX.Element {
 
             // with redux:
             const action = { type: VacationsActionType.VacationUpdated, payload: response.data };
-            store.dispatch(action);
+            store.dispatch(action); // update the vacations state
             alert(`Vacation to ${vacation.destination} has been successfully updated.`);
             props.history.push("/admin");
         }
         catch (err) {
             console.log(err);
             console.log(err.message);
-            alert("Error");
+            alert("Something went wrong.");
         }
     }
 
